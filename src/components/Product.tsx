@@ -8,8 +8,9 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import default_image from "../default.jpg";
+import default_image from "../static/default.jpg";
 import React from "react";
+import { Product as ProductType } from "../Interfaces/Product.interface";
 
 const useStyles = makeStyles({
   root: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Product: React.FC<any> = ({ product }: { product: any }) => {
+const Product: React.FC<any> = ({ product }: { product: ProductType }) => {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -38,12 +39,12 @@ const Product: React.FC<any> = ({ product }: { product: any }) => {
           className={classes.media}
           component="img"
           height={"140"}
-          image={default_image}
+          image={product.image ? product.image : default_image}
           title="Product image"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {2478524}
+            {product.name}
           </Typography>
         </CardContent>
       </CardActionArea>

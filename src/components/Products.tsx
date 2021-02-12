@@ -1,4 +1,10 @@
+import axios from "axios";
 import Product from "./Product";
+import {
+  ProductsList,
+  Product as ProductType,
+} from "../Interfaces/Product.interface";
+import { ProductsContext } from "../context/ProductsContext";
 import { CircularProgress, Grid, makeStyles } from "@material-ui/core";
 import React, {
   useCallback,
@@ -7,11 +13,8 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { ProductsContext } from "../context/ProductsContext";
-import axios from "axios";
 
 const useStyles = makeStyles({
-  root: {},
   gridContainer: {
     paddingLeft: "5px",
     paddingRight: "5px",
@@ -25,31 +28,45 @@ const Products: React.FC = () => {
   const classes = useStyles();
   const observer: any = useRef();
   const [products, setProducts] = useContext(ProductsContext);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
     setLoading(true);
+
     const fetchProducts = async () => {
-      let response = await axios.get("https://openlibrary.org/search.json", {
-        params: {
-          q: "Hello",
-          page: pageNumber,
-        },
-      });
-      return response.data;
+      const { data } = await axios.get<ProductsList>(
+        "http://localhost:8000/v1/products",
+        {
+          params: { page: pageNumber },
+        }
+      );
+      return data;
     };
+
     const getProducts = async () => {
-      return await fetchProducts();
+      const response: ProductsList = await fetchProducts();
+      if (response.next) {
+        setHasMore(true);
+      } else {
+        setHasMore(false);
+      }
+      return response.results;
     };
-    getProducts().then((products) => {
-      setProducts((prevProducts: any) => {
-        return Array.from(new Set([...prevProducts, ...products.docs]));
+
+    getProducts()
+      .then((products: ProductType[]) => {
+        setProducts((prevProducts: ProductType[]) => {
+          return Array.from(new Set([...prevProducts, ...products]));
+        });
+        setLoading(false);
+      })
+      .catch((e) => {
+        setHasMore(false);
+        setLoading(false);
+        return;
       });
-      setHasMore(products.docs.length > 0);
-      setLoading(false);
-    });
   }, [pageNumber, setProducts]);
 
   const lastProductElement = useCallback(
@@ -58,17 +75,17 @@ const Products: React.FC = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((pageNumber: any) => pageNumber + 1);
+          setPageNumber(pageNumber + 1);
         }
       });
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore]
+    [loading, hasMore, pageNumber]
   );
 
   return (
     <Grid item container className={classes.gridContainer} justify={"center"}>
-      {products.map((product: any, index: number) => {
+      {products.map((product: ProductType, index: number) => {
         if (products.length === index + 1) {
           return (
             <Grid
