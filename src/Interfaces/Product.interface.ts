@@ -16,3 +16,8 @@ export interface ProductsList {
   previous: string | null;
   results: Product[];
 }
+
+export interface ProductsContextInterface {
+  products: Product[];
+  addProducts: (name: Product[]) => void | Product[];
+}
