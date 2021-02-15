@@ -1,10 +1,10 @@
 import { Grid } from "@material-ui/core";
 import Search from "./Search";
 import Products from "./Products";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       padding: "5px 5px",

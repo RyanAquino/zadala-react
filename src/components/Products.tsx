@@ -13,7 +13,6 @@ import React, {
   useState,
   useEffect,
 } from "react";
-
 const useStyles = makeStyles({
   gridContainer: {
     paddingLeft: "5px",
@@ -26,8 +25,8 @@ const useStyles = makeStyles({
 
 const Products: React.FC = () => {
   const classes = useStyles();
-  const observer: any = useRef();
-  const [products, setProducts] = useContext(ProductsContext);
+  const observer = useRef<HTMLElement | IntersectionObserver>();
+  const { products, addProducts } = useContext(ProductsContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -37,7 +36,7 @@ const Products: React.FC = () => {
 
     const fetchProducts = async () => {
       const { data } = await axios.get<ProductsList>(
-        "http://localhost:8000/v1/products",
+        `http://localhost:8000/v1/products`,
         {
           params: { page: pageNumber },
         }
@@ -57,22 +56,24 @@ const Products: React.FC = () => {
 
     getProducts()
       .then((products: ProductType[]) => {
-        setProducts((prevProducts: ProductType[]) => {
-          return Array.from(new Set([...prevProducts, ...products]));
-        });
+        addProducts(products);
         setLoading(false);
       })
       .catch((e) => {
         setHasMore(false);
         setLoading(false);
+        e.toString();
         return;
       });
-  }, [pageNumber, setProducts]);
+  }, [pageNumber]);
 
   const lastProductElement = useCallback(
     (node) => {
       if (loading) return;
-      if (observer.current) observer.current.disconnect();
+      if (observer.current)
+        if ("disconnect" in observer.current) {
+          observer.current.disconnect();
+        }
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           setPageNumber(pageNumber + 1);

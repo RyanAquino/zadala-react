@@ -30,7 +30,11 @@ const useStyles = makeStyles({
   },
 });
 
-const Product: React.FC<any> = ({ product }: { product: ProductType }) => {
+const Product: React.FC<{ product: ProductType }> = ({
+  product,
+}: {
+  product: ProductType;
+}) => {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
