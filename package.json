@@ -22,7 +22,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "ci": "eslint . --max-warnings=0",
     "lint": "npx prettier --write .",
+    "lint-check": "npx prettier --check .",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
