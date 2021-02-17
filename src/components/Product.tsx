@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardActionArea,
   CardActions,
@@ -11,6 +10,9 @@ import {
 import default_image from "../static/default.jpg";
 import React from "react";
 import { Product as ProductType } from "../Interfaces/Product.interface";
+import { Link } from "react-router-dom";
+import { addToCart } from "../api/utils";
+import ModalPrompt from "./ModalPrompt";
 
 const useStyles = makeStyles({
   root: {
@@ -39,17 +41,28 @@ const Product: React.FC<{ product: ProductType }> = ({
 
   const determineImage = () => {
     if (product.image_url) {
-      return product.image_url;
-    } else if (product.image) {
-      return product.image;
+      product.image = product.image_url;
     } else {
-      return default_image;
+      product.image = default_image;
     }
+    return product.image;
+  };
+
+  const handleConfirm = (id: number): void => {
+    addToCart(id);
   };
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea
+        component={Link}
+        to={{
+          pathname: `/products/${product.id}`,
+          state: {
+            product: product,
+          },
+        }}
+      >
         <CardMedia
           className={classes.media}
           component="img"
@@ -61,12 +74,13 @@ const Product: React.FC<{ product: ProductType }> = ({
           <Typography gutterBottom variant="h5" component="h2">
             {product.name}
           </Typography>
+          <Typography gutterBottom variant="h6" component="h2">
+            ₱{product.price}
+          </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          Add to cart
-        </Button>
+        <ModalPrompt onConfirm={() => handleConfirm(product.id)} />
       </CardActions>
     </Card>
   );
