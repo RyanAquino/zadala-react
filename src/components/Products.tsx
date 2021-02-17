@@ -3,6 +3,7 @@ import Product from "./Product";
 import {
   ProductsList,
   Product as ProductType,
+  ProductsContextInterface,
 } from "../Interfaces/Product.interface";
 import { ProductsContext } from "../context/ProductsContext";
 import { CircularProgress, Grid, makeStyles } from "@material-ui/core";
@@ -26,10 +27,14 @@ const useStyles = makeStyles({
 const Products: React.FC = () => {
   const classes = useStyles();
   const observer = useRef<HTMLElement | IntersectionObserver>();
-  const { products, addProducts } = useContext(ProductsContext);
+  const { products, setProducts } = useContext<ProductsContextInterface>(
+    ProductsContext
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
+
+  useEffect(() => setProducts([]), []);
 
   useEffect(() => {
     setLoading(true);
@@ -56,7 +61,10 @@ const Products: React.FC = () => {
 
     getProducts()
       .then((products: ProductType[]) => {
-        addProducts(products);
+        setProducts((prevProducts: ProductType[]): ProductType[] => [
+          ...prevProducts,
+          ...products,
+        ]);
         setLoading(false);
       })
       .catch((e) => {
@@ -86,7 +94,7 @@ const Products: React.FC = () => {
 
   return (
     <Grid item container className={classes.gridContainer} justify={"center"}>
-      {products.map((product: ProductType, index: number) => {
+      {Array.from(products).map((product: ProductType, index: number) => {
         if (products.length === index + 1) {
           return (
             <Grid
