@@ -6,7 +6,7 @@ export interface Product {
   description: string;
   digital: boolean | null;
   price: number;
-  image: string | null;
+  image: string | undefined;
   image_url: string;
   quantity: number;
   created_at: string;
@@ -23,4 +23,14 @@ export interface ProductsList {
 export interface ProductsContextInterface {
   products: Product[] | [];
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+}
+
+export interface ProductDetailsPropTypes {
+  hash: string;
+  key: string;
+  pathname: string;
+  search: string;
+  state: {
+    product: Product;
+  };
 }

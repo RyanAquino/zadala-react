@@ -3,6 +3,7 @@ import { Grid, Hidden } from "@material-ui/core";
 import Account from "./components/Account";
 import Cart from "./components/Cart";
 import Home from "./components/Home";
+import ProductDetails from "./components/ProductDetails";
 import MobileNavigation from "./components/MobileNavigation";
 import DesktopNavigation from "./components/DesktopNavigation";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -23,6 +24,7 @@ const App: React.FC = () => {
             <Route path={"/"} exact component={Home} />
             <Route path={"/account"} exact component={Account} />
             <Route path={"/cart"} exact component={Cart} />
+            <Route path={"/products/:id"} exact component={ProductDetails} />
           </Grid>
           <Grid item container>
             <Hidden smUp>

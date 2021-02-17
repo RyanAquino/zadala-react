@@ -41,7 +41,7 @@ const Products: React.FC = () => {
 
     const fetchProducts = async () => {
       const { data } = await axios.get<ProductsList>(
-        `${process.env.REACT_APP_API_URL}/v1/products`,
+        `${process.env.REACT_APP_API_URL}/v1/products/`,
         {
           params: { page: pageNumber },
         }
