@@ -6,7 +6,7 @@ import {
 
 const contextDefaultValues: ProductsContextInterface = {
   products: [],
-  addProducts: () => {
+  setProducts: () => {
     return;
   },
 };
@@ -20,13 +20,9 @@ export const ProductsProvider: React.FC = ({
   children?: React.ReactNode;
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const addProducts = (newProducts: Product[]) =>
-    setProducts((products): Product[] =>
-      Array.from(new Set([...products, ...newProducts]))
-    );
 
   return (
-    <ProductsContext.Provider value={{ products, addProducts }}>
+    <ProductsContext.Provider value={{ products, setProducts }}>
       {children}
     </ProductsContext.Provider>
   );

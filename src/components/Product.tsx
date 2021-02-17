@@ -36,6 +36,17 @@ const Product: React.FC<{ product: ProductType }> = ({
   product: ProductType;
 }) => {
   const classes = useStyles();
+
+  const determineImage = () => {
+    if (product.image_url) {
+      return product.image_url;
+    } else if (product.image) {
+      return product.image;
+    } else {
+      return default_image;
+    }
+  };
+
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -43,7 +54,7 @@ const Product: React.FC<{ product: ProductType }> = ({
           className={classes.media}
           component="img"
           height={"140"}
-          image={product.image ? product.image : default_image}
+          image={determineImage()}
           title="Product image"
         />
         <CardContent>

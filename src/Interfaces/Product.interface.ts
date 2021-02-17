@@ -1,13 +1,16 @@
+import React from "react";
+
 export interface Product {
   id: number;
   name: string;
   description: string;
-  digital: boolean;
+  digital: boolean | null;
   price: number;
-  image: string;
+  image: string | null;
+  image_url: string;
   quantity: number;
   created_at: string;
-  supplier: number;
+  supplier: number | null;
 }
 
 export interface ProductsList {
@@ -18,6 +21,6 @@ export interface ProductsList {
 }
 
 export interface ProductsContextInterface {
-  products: Product[];
-  addProducts: (name: Product[]) => void | Product[];
+  products: Product[] | [];
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 }
