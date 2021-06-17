@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ProductDetailsPropTypes } from "../Interfaces/Product.interface";
 import {
   Button,
@@ -15,6 +15,8 @@ import {
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { addToCart } from "../api/utils";
 import Alert from "./Alerts";
+import { OrdersContext } from "../context/OrdersContext";
+import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -47,6 +49,9 @@ const ProductDetails: ({
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
+  const { orderData, setOrderData } = useContext<OrdersContextInterface>(
+    OrdersContext
+  );
 
   const handleClick = () => {
     setOpen(true);
@@ -104,7 +109,6 @@ const ProductDetails: ({
               </Typography>
             </CardContent>
             <CardActions>
-              {/*<ModalPrompt onConfirm={() => handleConfirm(product.id)} />*/}
               <Button
                 variant="contained"
                 color="primary"
@@ -112,6 +116,10 @@ const ProductDetails: ({
                   e.preventDefault();
                   addToCart(product.id);
                   handleClick();
+                  setOrderData({
+                    ...orderData,
+                    total_items: orderData.total_items + 1,
+                  });
                 }}
               >
                 Add to cart

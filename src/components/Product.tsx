@@ -8,11 +8,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import default_image from "../static/default.jpg";
-import React from "react";
+import React, { useContext } from "react";
 import { Product as ProductType } from "../Interfaces/Product.interface";
 import { Link } from "react-router-dom";
 import { addToCart } from "../api/utils";
 import ModalPrompt from "./ModalPrompt";
+import { OrdersContext } from "../context/OrdersContext";
+import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 
 const useStyles = makeStyles({
   root: {
@@ -32,12 +34,17 @@ const useStyles = makeStyles({
   },
 });
 
-const Product: React.FC<{ product: ProductType }> = ({
+const Product: React.FC<{ product: ProductType; handleClick: () => void }> = ({
   product,
+  handleClick,
 }: {
   product: ProductType;
+  handleClick: () => void;
 }) => {
   const classes = useStyles();
+  const { orderData, setOrderData } = useContext<OrdersContextInterface>(
+    OrdersContext
+  );
 
   const determineImage = () => {
     if (product.image_url) {
@@ -50,6 +57,11 @@ const Product: React.FC<{ product: ProductType }> = ({
 
   const handleConfirm = (id: number): void => {
     addToCart(id);
+    handleClick();
+    setOrderData({
+      ...orderData,
+      total_items: orderData.total_items + 1,
+    });
   };
 
   return (

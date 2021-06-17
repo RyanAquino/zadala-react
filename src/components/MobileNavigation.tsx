@@ -8,9 +8,12 @@ import {
 } from "@material-ui/core";
 import { Home, AccountCircle } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { createStyles, Theme } from "@material-ui/core/styles";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import { OrdersContext } from "../context/OrdersContext";
+import { OrdersContextInterface } from "../Interfaces/Orders.interface";
+import { getOrders } from "../api/utils";
 
 const useStyles = makeStyles({
   root: {
@@ -36,6 +39,18 @@ const StyledBadge = withStyles((theme: Theme) =>
 
 const MobileNavigation: React.FC = () => {
   const classes = useStyles();
+  const { orderData, setOrderData } = useContext<OrdersContextInterface>(
+    OrdersContext
+  );
+
+  useEffect(() => {
+    console.log("use effect mobile nav");
+    const fetchOrders = async () => await getOrders();
+    fetchOrders().then((orderData) => {
+      setOrderData(orderData);
+    });
+  }, []);
+
   return (
     <Box className={classes.root}>
       <BottomNavigation showLabels className={classes.stickToBottom}>
@@ -48,7 +63,7 @@ const MobileNavigation: React.FC = () => {
         <BottomNavigationAction
           label="Cart"
           icon={
-            <StyledBadge badgeContent={1} color="secondary">
+            <StyledBadge badgeContent={orderData.total_items} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
           }

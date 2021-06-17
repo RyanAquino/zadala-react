@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Order } from "../Interfaces/Orders.interface";
 
 export const addToCart = (productId: number): void => {
   axios
@@ -25,4 +26,14 @@ export const addToCart = (productId: number): void => {
         alert(error.response.data.detail);
       }
     });
+};
+
+export const getOrders = (): Promise<Order> => {
+  return axios
+    .get(`${process.env.REACT_APP_API_URL}/v1/orders/`, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+    })
+    .then(({ data }) => data);
 };
