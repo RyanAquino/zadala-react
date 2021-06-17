@@ -10,28 +10,31 @@ import { Route, BrowserRouter as Router } from "react-router-dom";
 import React from "react";
 import HeaderBar from "./components/HeaderBar";
 import ModalPrompt from "./components/ModalPrompt";
+import { OrdersProvider } from "./context/OrdersContext";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Grid container>
-        <ProductsProvider>
-          <Grid item container>
-            <HeaderBar />
-          </Grid>
-          <Grid item container xs={12} justify={"center"}>
-            <Route path={"/"} exact component={Home} />
-            <Route path={"/account"} exact component={Account} />
-            <Route path={"/cart"} exact component={Cart} />
-            <Route path={"/products/:id"} exact component={ProductDetails} />
-            <Route path={"/modal"} exact component={ModalPrompt} />
-          </Grid>
-          <Grid item container>
-            <Hidden smUp>
-              <MobileNavigation />
-            </Hidden>
-          </Grid>
-        </ProductsProvider>
+        <OrdersProvider>
+          <ProductsProvider>
+            <Grid item container>
+              <HeaderBar />
+            </Grid>
+            <Grid item container xs={12} justify={"center"}>
+              <Route path={"/"} exact component={Home} />
+              <Route path={"/account"} exact component={Account} />
+              <Route path={"/cart"} exact component={Cart} />
+              <Route path={"/products/:id"} exact component={ProductDetails} />
+              <Route path={"/modal"} exact component={ModalPrompt} />
+            </Grid>
+            <Grid item container>
+              <Hidden smUp>
+                <MobileNavigation />
+              </Hidden>
+            </Grid>
+          </ProductsProvider>
+        </OrdersProvider>
       </Grid>
     </Router>
   );

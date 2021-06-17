@@ -6,7 +6,13 @@ import {
   ProductsContextInterface,
 } from "../Interfaces/Product.interface";
 import { ProductsContext } from "../context/ProductsContext";
-import { CircularProgress, Grid, makeStyles } from "@material-ui/core";
+import {
+  CircularProgress,
+  Grid,
+  makeStyles,
+  Snackbar,
+  SnackbarOrigin,
+} from "@material-ui/core";
 import React, {
   useCallback,
   useRef,
@@ -14,6 +20,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import Alert from "./Alerts";
 const useStyles = makeStyles({
   gridContainer: {
     paddingLeft: "5px",
@@ -33,6 +40,7 @@ const Products: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => setProducts([]), []);
 
@@ -92,8 +100,35 @@ const Products: React.FC = () => {
     [loading, hasMore, pageNumber]
   );
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
     <Grid item container className={classes.gridContainer} justify={"center"}>
+      <Snackbar
+        anchorOrigin={
+          {
+            vertical: "top",
+            horizontal: "center",
+          } as SnackbarOrigin
+        }
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+      >
+        <Alert severity="success" onClose={handleClose}>
+          Added to cart
+        </Alert>
+      </Snackbar>
       {Array.from(products).map((product: ProductType, index: number) => {
         if (products.length === index + 1) {
           return (
@@ -106,7 +141,7 @@ const Products: React.FC = () => {
               md={3}
               className={classes.productContainer}
             >
-              <Product product={product} />
+              <Product product={product} handleClick={handleClick} />
             </Grid>
           );
         } else {
@@ -119,7 +154,7 @@ const Products: React.FC = () => {
               md={3}
               className={classes.productContainer}
             >
-              <Product product={product} />
+              <Product product={product} handleClick={handleClick} />
             </Grid>
           );
         }
