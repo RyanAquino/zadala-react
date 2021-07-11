@@ -11,6 +11,7 @@ export interface Product {
   quantity: number;
   created_at: string;
   supplier: number | null;
+  isMax?: boolean;
 }
 
 export interface ProductsList {

@@ -1,13 +1,18 @@
 import axios from "axios";
 import { Order } from "../Interfaces/Orders.interface";
+import default_image from "../static/default.jpg";
+import { Product } from "../Interfaces/Product.interface";
 
-export const addToCart = (productId: number): void => {
-  axios
+export const updateCart = (
+  productId: number,
+  action: string
+): Promise<Order> => {
+  return axios
     .post(
       `${process.env.REACT_APP_API_URL}/v1/orders/update-cart/`,
       {
         productId: productId,
-        action: "add",
+        action: action,
       },
       {
         headers: {
@@ -15,9 +20,7 @@ export const addToCart = (productId: number): void => {
         },
       }
     )
-    .then(() => {
-      console.log("Success");
-    })
+    .then(({ data }) => data)
     .catch((error) => {
       if (error.response) {
         console.log(error.response.data);
@@ -36,4 +39,9 @@ export const getOrders = (): Promise<Order> => {
       },
     })
     .then(({ data }) => data);
+};
+
+export const determineImage = (product: Product): string => {
+  product.image = product.image_url ? product.image_url : default_image;
+  return product.image;
 };

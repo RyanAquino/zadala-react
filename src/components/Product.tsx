@@ -7,14 +7,16 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import default_image from "../static/default.jpg";
 import React, { useContext } from "react";
 import { Product as ProductType } from "../Interfaces/Product.interface";
 import { Link } from "react-router-dom";
-import { addToCart } from "../api/utils";
+import { updateCart, determineImage } from "../api/utils";
 import ModalPrompt from "./ModalPrompt";
 import { OrdersContext } from "../context/OrdersContext";
-import { OrdersContextInterface } from "../Interfaces/Orders.interface";
+import {
+  OrderItem,
+  OrdersContextInterface,
+} from "../Interfaces/Orders.interface";
 
 const useStyles = makeStyles({
   root: {
@@ -34,34 +36,34 @@ const useStyles = makeStyles({
   },
 });
 
-const Product: React.FC<{ product: ProductType; handleClick: () => void }> = ({
+const Product: React.FC<{
+  product: ProductType;
+  onClick: (success: boolean) => void;
+}> = ({
   product,
-  handleClick,
+  onClick,
 }: {
   product: ProductType;
-  handleClick: () => void;
+  onClick: (success: boolean) => void;
 }) => {
   const classes = useStyles();
   const { orderData, setOrderData } = useContext<OrdersContextInterface>(
     OrdersContext
   );
 
-  const determineImage = () => {
-    if (product.image_url) {
-      product.image = product.image_url;
+  const handleConfirm = async (product: ProductType): Promise<void> => {
+    const orderItems = orderData.products;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [orderItem, ...rest] = orderItems.filter(
+      (item: OrderItem) => item.product.id === product.id
+    );
+    if (!orderItem || ++orderItem.quantity <= orderItem.product.quantity) {
+      onClick(true);
+      const response = await updateCart(product.id, "add");
+      setOrderData(response);
     } else {
-      product.image = default_image;
+      onClick(false);
     }
-    return product.image;
-  };
-
-  const handleConfirm = (id: number): void => {
-    addToCart(id);
-    handleClick();
-    setOrderData({
-      ...orderData,
-      total_items: orderData.total_items + 1,
-    });
   };
 
   return (
@@ -79,7 +81,7 @@ const Product: React.FC<{ product: ProductType; handleClick: () => void }> = ({
           className={classes.media}
           component="img"
           height={"140"}
-          image={determineImage()}
+          image={determineImage(product)}
           title="Product image"
         />
         <CardContent>
@@ -92,7 +94,7 @@ const Product: React.FC<{ product: ProductType; handleClick: () => void }> = ({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <ModalPrompt onConfirm={() => handleConfirm(product.id)} />
+        <ModalPrompt onConfirm={() => handleConfirm(product)} />
       </CardActions>
     </Card>
   );
