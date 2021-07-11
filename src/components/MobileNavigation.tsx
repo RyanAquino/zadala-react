@@ -44,7 +44,6 @@ const MobileNavigation: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log("use effect mobile nav");
     const fetchOrders = async () => await getOrders();
     fetchOrders().then((orderData) => {
       setOrderData(orderData);

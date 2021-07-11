@@ -41,6 +41,7 @@ const Products: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [open, setOpen] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(false);
 
   useEffect(() => setProducts([]), []);
 
@@ -100,15 +101,16 @@ const Products: React.FC = () => {
     [loading, hasMore, pageNumber]
   );
 
-  const handleClick = () => {
+  const handleClick = (success: boolean) => {
     setOpen(true);
+    setIsSuccess(success);
   };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-
+    setIsSuccess(false);
     setOpen(false);
   };
 
@@ -125,9 +127,15 @@ const Products: React.FC = () => {
         autoHideDuration={5000}
         onClose={handleClose}
       >
-        <Alert severity="success" onClose={handleClose}>
-          Added to cart
-        </Alert>
+        {isSuccess ? (
+          <Alert severity="success" onClose={handleClose}>
+            Added to cart
+          </Alert>
+        ) : (
+          <Alert severity="warning" onClose={handleClose}>
+            You have reached the maximum quantity available for this item
+          </Alert>
+        )}
       </Snackbar>
       {Array.from(products).map((product: ProductType, index: number) => {
         if (products.length === index + 1) {
@@ -141,7 +149,7 @@ const Products: React.FC = () => {
               md={3}
               className={classes.productContainer}
             >
-              <Product product={product} handleClick={handleClick} />
+              <Product product={product} onClick={handleClick} />
             </Grid>
           );
         } else {
@@ -154,7 +162,7 @@ const Products: React.FC = () => {
               md={3}
               className={classes.productContainer}
             >
-              <Product product={product} handleClick={handleClick} />
+              <Product product={product} onClick={handleClick} />
             </Grid>
           );
         }
