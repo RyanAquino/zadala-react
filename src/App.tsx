@@ -1,6 +1,6 @@
 import "./App.css";
 import { Grid, Hidden } from "@material-ui/core";
-import Account from "./components/Account";
+import Profile from "./components/Profile";
 import Cart from "./components/Cart";
 import Home from "./components/Home";
 import ProductDetails from "./components/ProductDetails";
@@ -23,7 +23,7 @@ const App: React.FC = () => {
             </Grid>
             <Grid item container xs={12} justify={"center"}>
               <Route path={"/"} exact component={Home} />
-              <Route path={"/account"} exact component={Account} />
+              <Route path={"/profile"} exact component={Profile} />
               <Route path={"/cart"} exact component={Cart} />
               <Route path={"/products/:id"} exact component={ProductDetails} />
               <Route path={"/modal"} exact component={ModalPrompt} />

@@ -2,6 +2,10 @@ import axios from "axios";
 import { Order } from "../Interfaces/Orders.interface";
 import default_image from "../static/default.jpg";
 import { Product } from "../Interfaces/Product.interface";
+import {
+  ProfileDetailsInterface,
+  ProfileInterface,
+} from "../Interfaces/Profile.interface";
 
 export const updateCart = (
   productId: number,
@@ -44,4 +48,36 @@ export const getOrders = (): Promise<Order> => {
 export const determineImage = (product: Product): string => {
   product.image = product.image_url ? product.image_url : default_image;
   return product.image;
+};
+
+export const getProfileDetails = (): Promise<ProfileInterface> => {
+  return axios
+    .get(`${process.env.REACT_APP_API_URL}/v1/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+    })
+    .then(({ data }) => data);
+};
+
+export const logout = (): void => {
+  axios
+    .get(`${process.env.REACT_APP_API_URL}/v1/auth/logout`, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+    })
+    .then();
+};
+
+export const updateProfileDetails = (
+  data: ProfileDetailsInterface
+): Promise<ProfileInterface> => {
+  return axios
+    .patch(`${process.env.REACT_APP_API_URL}/v1/auth/profile/`, data, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+    })
+    .then();
 };
