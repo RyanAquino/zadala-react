@@ -73,7 +73,7 @@ const MobileNavigation: React.FC = () => {
           label="Account"
           icon={<AccountCircle />}
           component={Link}
-          to="/account"
+          to="/profile"
         />
       </BottomNavigation>
     </Box>
