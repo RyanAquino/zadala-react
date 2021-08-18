@@ -1,15 +1,15 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { OrdersContext } from "../context/OrdersContext";
 import {
   Grid,
-  CircularProgress,
   Card,
   CardContent,
   Typography,
   CardActions,
   makeStyles,
   CardMedia,
-  Button,
+  SnackbarOrigin,
+  Snackbar,
 } from "@material-ui/core";
 import {
   OrderItem,
@@ -19,6 +19,8 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
 import { determineImage, getOrders, updateCart } from "../api/utils";
+import Checkout from "../components/Checkout";
+import Alert from "./Alerts";
 
 const useStyles = makeStyles({
   root: {
@@ -57,6 +59,8 @@ const Cart: React.FC = () => {
     OrdersContext
   );
   const classes = useStyles();
+  const [success, setSuccess] = useState(false);
+  const [getTotalItems, setTotalItems] = React.useState(orderData.total_items);
 
   useEffect(() => {
     const fetchOrders = async () => await getOrders();
@@ -65,13 +69,12 @@ const Cart: React.FC = () => {
     });
   }, []);
   const products: OrderItem[] = orderData.products;
-  const totalItems: number = orderData.total_items;
   const totalAmount: number = orderData.total_amount;
 
   const processMaxQuantity = (product: OrderItem, action: string) => {
     product.product.isMax = action == "add";
     return {
-      total_items: totalItems,
+      total_items: getTotalItems,
       total_amount: totalAmount,
       products: [...products],
     };
@@ -91,6 +94,9 @@ const Cart: React.FC = () => {
   const processRemoveToCart = async (product: OrderItem): Promise<void> => {
     const action = "remove";
     const response = await updateCart(product.product.id, action);
+    if (response.total_items === 0) {
+      setTotalItems(response.total_items);
+    }
     setOrderData(response);
   };
 
@@ -103,6 +109,21 @@ const Cart: React.FC = () => {
       xs={12}
       md={10}
     >
+      <Snackbar
+        anchorOrigin={
+          {
+            vertical: "top",
+            horizontal: "center",
+          } as SnackbarOrigin
+        }
+        open={success}
+        onClose={() => setSuccess(false)}
+        autoHideDuration={5000}
+      >
+        <Alert severity="success" onClose={() => setSuccess(false)}>
+          Order Success
+        </Alert>
+      </Snackbar>
       <Grid
         item
         container
@@ -114,18 +135,22 @@ const Cart: React.FC = () => {
         <Card className={classes.summaryRoot}>
           <CardContent>
             <Typography color="textPrimary">
-              Total Amount: ₱{totalAmount}
+              Total Amount: {totalAmount ? `₱${totalAmount}` : `₱0`}
             </Typography>
           </CardContent>
           <CardActions>
-            <Button type="button" variant="contained" color="primary">
-              Checkout
-            </Button>
+            <Checkout
+              setSuccessState={(state: boolean) => {
+                setSuccess(state);
+              }}
+              getTotalItems={getTotalItems}
+              setTotalItems={setTotalItems}
+            />
           </CardActions>
         </Card>
       </Grid>
       <Grid item container justify={"center"}>
-        {products ? (
+        {totalAmount ? (
           products.map((product: OrderItem, index: number) => {
             return (
               <Grid
@@ -183,7 +208,9 @@ const Cart: React.FC = () => {
             );
           })
         ) : (
-          <CircularProgress />
+          <Typography variant="h6" gutterBottom>
+            No items to show
+          </Typography>
         )}
       </Grid>
     </Grid>
