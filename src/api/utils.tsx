@@ -6,6 +6,7 @@ import {
   ProfileDetailsInterface,
   ProfileInterface,
 } from "../Interfaces/Profile.interface";
+import { ShippingAddress } from "../Interfaces/Shipping.interface";
 
 export const updateCart = (
   productId: number,
@@ -75,6 +76,18 @@ export const updateProfileDetails = (
 ): Promise<ProfileInterface> => {
   return axios
     .patch(`${process.env.REACT_APP_API_URL}/v1/auth/profile/`, data, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+    })
+    .then();
+};
+
+export const processOrder = (
+  data: ShippingAddress
+): Promise<ShippingAddress> => {
+  return axios
+    .post(`${process.env.REACT_APP_API_URL}/v1/orders/process-order/`, data, {
       headers: {
         Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
