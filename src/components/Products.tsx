@@ -1,7 +1,5 @@
-import axios from "axios";
 import Product from "./Product";
 import {
-  ProductsList,
   Product as ProductType,
   ProductsContextInterface,
 } from "../Interfaces/Product.interface";
@@ -13,13 +11,7 @@ import {
   Snackbar,
   SnackbarOrigin,
 } from "@material-ui/core";
-import React, {
-  useCallback,
-  useRef,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { useCallback, useRef, useContext, Dispatch } from "react";
 import Alert from "./Alerts";
 const useStyles = makeStyles({
   gridContainer: {
@@ -31,58 +23,35 @@ const useStyles = makeStyles({
   },
 });
 
-const Products: React.FC = () => {
+const Products = ({
+  loading,
+  hasMore,
+  pageNumber,
+  setPageNumber,
+}: {
+  loading: boolean;
+  hasMore: boolean;
+  pageNumber: number;
+  setPageNumber: Dispatch<number>;
+}): JSX.Element => {
   const classes = useStyles();
-  const observer = useRef<HTMLElement | IntersectionObserver>();
-  const { products, setProducts } = useContext<ProductsContextInterface>(
-    ProductsContext
-  );
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(false);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const { products } = useContext<ProductsContextInterface>(ProductsContext);
   const [open, setOpen] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const observer = useRef<HTMLElement | IntersectionObserver>();
 
-  useEffect(() => setProducts([]), []);
+  const handleClick = (success: boolean) => {
+    setOpen(true);
+    setIsSuccess(success);
+  };
 
-  useEffect(() => {
-    setLoading(true);
-
-    const fetchProducts = async () => {
-      const { data } = await axios.get<ProductsList>(
-        `${process.env.REACT_APP_API_URL}/v1/products/`,
-        {
-          params: { page: pageNumber },
-        }
-      );
-      return data;
-    };
-
-    const getProducts = async () => {
-      const response: ProductsList = await fetchProducts();
-      if (response.next) {
-        setHasMore(true);
-      } else {
-        setHasMore(false);
-      }
-      return response.results;
-    };
-
-    getProducts()
-      .then((products: ProductType[]) => {
-        setProducts((prevProducts: ProductType[]): ProductType[] => [
-          ...prevProducts,
-          ...products,
-        ]);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setHasMore(false);
-        setLoading(false);
-        e.toString();
-        return;
-      });
-  }, [pageNumber]);
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setIsSuccess(false);
+    setOpen(false);
+  };
 
   const lastProductElement = useCallback(
     (node) => {
@@ -100,19 +69,6 @@ const Products: React.FC = () => {
     },
     [loading, hasMore, pageNumber]
   );
-
-  const handleClick = (success: boolean) => {
-    setOpen(true);
-    setIsSuccess(success);
-  };
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setIsSuccess(false);
-    setOpen(false);
-  };
 
   return (
     <Grid item container className={classes.gridContainer} justify={"center"}>
