@@ -1,7 +1,11 @@
 import axios from "axios";
 import { Order } from "../Interfaces/Orders.interface";
 import default_image from "../static/default.jpg";
-import { Product } from "../Interfaces/Product.interface";
+import {
+  Product,
+  ProductParams,
+  ProductsList,
+} from "../Interfaces/Product.interface";
 import {
   ProfileDetailsInterface,
   ProfileInterface,
@@ -93,4 +97,19 @@ export const processOrder = (
       },
     })
     .then();
+};
+
+export const fetchProducts = async (
+  params: ProductParams
+): Promise<ProductsList> => {
+  const page = params.page || 1;
+  const search = params.search || "";
+  const cancelToken = params.cancelToken;
+
+  return axios
+    .get<ProductsList>(`${process.env.REACT_APP_API_URL}/v1/products/`, {
+      params: { page: page, search: search },
+      cancelToken: cancelToken,
+    })
+    .then(({ data }) => data);
 };

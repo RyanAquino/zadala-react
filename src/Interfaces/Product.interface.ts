@@ -1,4 +1,5 @@
 import React from "react";
+import { CancelToken } from "axios";
 
 export interface Product {
   id: number;
@@ -34,4 +35,10 @@ export interface ProductDetailsPropTypes {
   state: {
     product: Product;
   };
+}
+
+export interface ProductParams {
+  search?: string;
+  page?: number;
+  cancelToken?: CancelToken;
 }

@@ -3,6 +3,7 @@ import Search from "./Search";
 import Products from "./Products";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import React from "react";
+import useProductSearch from "./useProductSearch";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -17,6 +18,13 @@ const useStyles = makeStyles(() =>
 
 const Home: React.FC = () => {
   const classes = useStyles();
+  const {
+    setQuery,
+    loading,
+    hasMore,
+    pageNumber,
+    setPageNumber,
+  } = useProductSearch();
 
   return (
     <>
@@ -28,7 +36,7 @@ const Home: React.FC = () => {
         justify={"center"}
         className={classes.root}
       >
-        <Search />
+        <Search setPageNumber={setPageNumber} setQuery={setQuery} />
       </Grid>
       <Grid
         item
@@ -39,7 +47,12 @@ const Home: React.FC = () => {
         md={8}
         justify={"center"}
       >
-        <Products />
+        <Products
+          loading={loading}
+          hasMore={hasMore}
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+        />
       </Grid>
     </>
   );
