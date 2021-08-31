@@ -67,13 +67,15 @@ const MobileNavigation: React.FC = () => {
             </StyledBadge>
           }
           component={Link}
-          to="/cart"
+          to={localStorage.getItem("token") === undefined ? "/login" : "/cart"}
         />
         <BottomNavigationAction
           label="Account"
           icon={<AccountCircle />}
           component={Link}
-          to="/profile"
+          to={
+            localStorage.getItem("token") === undefined ? "/login" : "/profile"
+          }
         />
       </BottomNavigation>
     </Box>

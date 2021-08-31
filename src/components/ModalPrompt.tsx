@@ -1,6 +1,7 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Button, Modal } from "@material-ui/core";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,13 +32,19 @@ const ModalPrompt = ({ onConfirm }: { onConfirm: () => void }): JSX.Element => {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setIsOpen] = React.useState(false);
+  const history = useHistory();
 
   const setOpen = () => {
     setIsOpen(true);
   };
 
   const addToCart = () => {
-    onConfirm();
+    if (
+      localStorage.getItem("token") === null ||
+      localStorage.getItem("token") == ""
+    )
+      history.push("/login");
+    else onConfirm();
     setIsOpen(false);
   };
 

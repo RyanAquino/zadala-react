@@ -11,6 +11,7 @@ import {
   ProfileInterface,
 } from "../Interfaces/Profile.interface";
 import { ShippingAddress } from "../Interfaces/Shipping.interface";
+import { Authentication, User } from "../Interfaces/User.interface";
 
 export const updateCart = (
   productId: number,
@@ -25,7 +26,7 @@ export const updateCart = (
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     )
@@ -44,7 +45,7 @@ export const getOrders = (): Promise<Order> => {
   return axios
     .get(`${process.env.REACT_APP_API_URL}/v1/orders/`, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
     .then(({ data }) => data);
@@ -59,7 +60,7 @@ export const getProfileDetails = (): Promise<ProfileInterface> => {
   return axios
     .get(`${process.env.REACT_APP_API_URL}/v1/auth/profile`, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
     .then(({ data }) => data);
@@ -69,7 +70,7 @@ export const logout = (): void => {
   axios
     .get(`${process.env.REACT_APP_API_URL}/v1/auth/logout`, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
     .then();
@@ -81,7 +82,7 @@ export const updateProfileDetails = (
   return axios
     .patch(`${process.env.REACT_APP_API_URL}/v1/auth/profile/`, data, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
     .then();
@@ -93,7 +94,7 @@ export const processOrder = (
   return axios
     .post(`${process.env.REACT_APP_API_URL}/v1/orders/process-order/`, data, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
     .then();
@@ -111,5 +112,18 @@ export const fetchProducts = async (
       params: { page: page, search: search },
       cancelToken: cancelToken,
     })
+    .then(({ data }) => data);
+};
+
+export const authenticate = (auth: Authentication): Promise<User> => {
+  return axios
+    .post(`${process.env.REACT_APP_API_URL}/v1/auth/login/`, auth)
+    .then(({ data }) => data)
+    .catch((e) => e);
+};
+
+export const retrieveProduct = async (id: string): Promise<Product> => {
+  return axios
+    .get<Product>(`${process.env.REACT_APP_API_URL}/v1/products/${id}/`)
     .then(({ data }) => data);
 };

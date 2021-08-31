@@ -10,6 +10,7 @@ Zadala React Application is the frontend application for [Zadala API](https://gi
 ### Technology
 
 - React
+- Typescript
 - Jest
 - Material UI
 

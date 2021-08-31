@@ -1,5 +1,8 @@
-import React, { useContext } from "react";
-import { ProductDetailsPropTypes } from "../Interfaces/Product.interface";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Product,
+  ProductDetailsPropTypes,
+} from "../Interfaces/Product.interface";
 import {
   Button,
   Card,
@@ -13,13 +16,15 @@ import {
   SnackbarOrigin,
 } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { updateCart } from "../api/utils";
+import { determineImage, retrieveProduct, updateCart } from "../api/utils";
 import Alert from "./Alerts";
 import { OrdersContext } from "../context/OrdersContext";
 import {
   OrderItem,
   OrdersContextInterface,
 } from "../Interfaces/Orders.interface";
+import { useParams } from "react-router-dom";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -48,7 +53,6 @@ const ProductDetails: ({
 }: {
   location: ProductDetailsPropTypes;
 }) => JSX.Element = ({ location }: { location: ProductDetailsPropTypes }) => {
-  const product = location.state.product;
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -56,6 +60,20 @@ const ProductDetails: ({
   const { orderData, setOrderData } = useContext<OrdersContextInterface>(
     OrdersContext
   );
+  const [product, setProduct] = useState({} as Product);
+  const history = useHistory();
+  const { id } = useParams<{ id?: string | undefined }>();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (location.state === undefined && id) {
+        setProduct(await retrieveProduct(id).then((data) => data));
+      } else {
+        setProduct(location.state.product);
+      }
+    };
+    fetchProduct().then();
+  }, []);
 
   const handleClick = (success: boolean) => {
     setOpen(true);
@@ -112,7 +130,7 @@ const ProductDetails: ({
         <Grid item sm={4} md={3}>
           <Paper elevation={3} variant={"outlined"}>
             <img
-              src={product.image}
+              src={determineImage(product)}
               alt="Product image"
               className={classes.productImage}
             />
@@ -140,7 +158,12 @@ const ProductDetails: ({
                 color="primary"
                 onClick={(e) => {
                   e.preventDefault();
-                  processAddToCart();
+                  if (
+                    localStorage.getItem("token") === null ||
+                    localStorage.getItem("token") == ""
+                  )
+                    history.push("/login");
+                  else processAddToCart().then();
                 }}
               >
                 Add to cart

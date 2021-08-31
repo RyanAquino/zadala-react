@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import {
   Grid,
@@ -18,6 +18,11 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { getProfileDetails, updateProfileDetails } from "../api/utils";
 import { ProfileInterface } from "../Interfaces/Profile.interface";
 import Alert from "./Alerts";
+import { useHistory } from "react-router";
+import { User, UserContextInterface } from "../Interfaces/User.interface";
+import { UserContext } from "../context/UserContext";
+import { OrdersContextInterface } from "../Interfaces/Orders.interface";
+import { OrdersContext } from "../context/OrdersContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,6 +50,9 @@ const Profile: React.FC = () => {
   const [readOnly, setReadonly] = useState(true);
   const [success, setSuccess] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const history = useHistory();
+  const { setUserData } = useContext<UserContextInterface>(UserContext);
+  const { setOrderData } = useContext<OrdersContextInterface>(OrdersContext);
 
   const saveProfile = async () => {
     setIsEditing(false);
@@ -63,16 +71,36 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchProfileDetails = async () => {
-      const data = await getProfileDetails();
-      setProfileDetails(data);
-      setInitialDetails(data);
-    };
-    fetchProfileDetails().then();
+    if (
+      (localStorage.getItem("token") === null ||
+        localStorage.getItem("token") == "") &&
+      location.pathname === "/profile"
+    )
+      history.push("/login");
+    else {
+      const fetchProfileDetails = async () => {
+        const data = await getProfileDetails();
+        setProfileDetails(data);
+        setInitialDetails(data);
+      };
+      fetchProfileDetails().then();
+    }
   }, []);
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfileDetails({ ...profileDetails, [e.target.name]: e.target.value });
+  };
+
+  const handleLogout = () => {
+    history.push("/");
+    setUserData({} as User);
+    setOrderData((prevOrder) => {
+      return {
+        ...prevOrder,
+        total_items: 0,
+      };
+    });
+    localStorage.removeItem("token");
   };
 
   const handleDate = (date: string) => new Date(date).toDateString();
@@ -215,6 +243,7 @@ const Profile: React.FC = () => {
               startIcon={<ExitToAppIcon />}
               size={"large"}
               fullWidth
+              onClick={() => handleLogout()}
             >
               Logout
             </Button>
