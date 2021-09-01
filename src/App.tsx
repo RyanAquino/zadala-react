@@ -7,8 +7,8 @@ import ProductDetails from "./components/ProductDetails";
 import MobileNavigation from "./components/MobileNavigation";
 import { ProductsProvider } from "./context/ProductsContext";
 import { UserProvider } from "./context/UserContext";
-import { Route, BrowserRouter as Router } from "react-router-dom";
-import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useState } from "react";
 import HeaderBar from "./components/HeaderBar";
 import ModalPrompt from "./components/ModalPrompt";
 import { OrdersProvider } from "./context/OrdersContext";
@@ -16,6 +16,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 
 const App: React.FC = () => {
+  const [registered, setRegister] = useState<boolean>(false);
+
   return (
     <Router>
       <Grid container>
@@ -27,8 +29,18 @@ const App: React.FC = () => {
               </Grid>
               <Grid item container xs={12} justify={"center"}>
                 <Route path={"/"} exact component={Home} />
-                <Route path={"/login"} exact component={Login} />
-                <Route path={"/register"} exact component={Register} />
+                <Route
+                  path={"/login"}
+                  exact
+                  component={() => (
+                    <Login registered={registered} setRegister={setRegister} />
+                  )}
+                />
+                <Route
+                  path={"/register"}
+                  exact
+                  component={() => <Register setRegister={setRegister} />}
+                />
                 <Route path={"/profile"} exact component={Profile} />
                 <Route path={"/cart"} exact component={Cart} />
                 <Route

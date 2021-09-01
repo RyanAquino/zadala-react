@@ -1,17 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { Dispatch, useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import {
-  Grid,
   Avatar,
-  Typography,
-  TextField,
-  Button,
-  Link,
-  FormControlLabel,
-  Checkbox,
-  makeStyles,
-  Container,
   Backdrop,
+  Button,
+  Checkbox,
   CircularProgress,
+  Container,
+  FormControlLabel,
+  Grid,
+  Link,
+  makeStyles,
+  Snackbar,
+  SnackbarOrigin,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import {
@@ -19,10 +22,11 @@ import {
   UserContextInterface,
 } from "../Interfaces/User.interface";
 import { UserContext } from "../context/UserContext";
-import { authenticate, getOrders } from "../api/utils";
+import { authenticate, getOrders, validateToken } from "../api/utils";
 import { useHistory } from "react-router";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { OrdersContext } from "../context/OrdersContext";
+import Alert from "./Alerts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,29 +53,83 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login: React.FC = () => {
+const Login = ({
+  registered,
+  setRegister,
+}: {
+  registered: boolean;
+  setRegister: Dispatch<boolean>;
+}): JSX.Element => {
   const classes = useStyles();
   const { setUserData } = useContext<UserContextInterface>(UserContext);
   const [credentials, setCredentials] = useState({} as Authentication);
   const history = useHistory();
   const { setOrderData } = useContext<OrdersContextInterface>(OrdersContext);
+  const [errors, setErrors] = useState<string[] | []>([]);
+  const [errorWindow, setErrorWindow] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(["email"]);
+  const [rememberMe, setRememberMe] = useState(Boolean(cookies.email) || false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (validateToken()) history.push("/");
+    if (rememberMe) setCredentials({ ...credentials, email: cookies.email });
+  }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     handleToggle();
     e.preventDefault();
-    const response = await authenticate(credentials);
-    setUserData(response);
-    localStorage.setItem("token", response.access);
-    const fetchOrders = async () => await getOrders();
-    fetchOrders().then((orderData) => {
-      setOrderData(orderData);
+
+    const response = await authenticate(credentials).catch((err) => {
+      const statusCode = err.response.status;
+      let error = ["Something went wrong"];
+
+      if (statusCode === 403) {
+        const { detail }: { detail: string } = err.response.data;
+        error = [detail];
+      } else if (statusCode === 400) {
+        const { email, password } = err.response.data;
+        error = [];
+
+        if (email) {
+          error.push(`Email Address: ${email[0]}`);
+        }
+        if (password) {
+          error.push(`Password: ${password[0]}`);
+        }
+      }
+      setErrorWindow(true);
+      setErrors(error);
     });
-    history.push("/");
+
+    if (response) {
+      setUserData({ ...response, login: true });
+      localStorage.setItem("token", response.access);
+      const fetchOrders = async () => await getOrders();
+      fetchOrders().then((orderData) => {
+        setOrderData(orderData);
+      });
+      history.push("/");
+    }
+
+    if (rememberMe) {
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 7);
+      setCookie("email", credentials.email || "", {
+        path: "/",
+        expires,
+      });
+    } else {
+      removeCookie("email");
+    }
+
+    handleClose();
   };
+
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
-  const [open, setOpen] = React.useState(false);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -79,11 +137,58 @@ const Login: React.FC = () => {
     setOpen(!open);
   };
 
+  const handleSnackbarClose = () => {
+    setRegister(false);
+  };
+
+  const handleErrorSnackbarClose = () => {
+    setErrorWindow(false);
+  };
+
+  const handleRememberMe = () => {
+    setRememberMe(!rememberMe);
+  };
+
   return (
     <Container maxWidth={"xs"} className={classes.root}>
       <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      <Snackbar
+        anchorOrigin={
+          {
+            vertical: "top",
+            horizontal: "center",
+          } as SnackbarOrigin
+        }
+        open={registered}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity="success" onClose={handleSnackbarClose}>
+          Your account has been successfully created.
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        anchorOrigin={
+          {
+            vertical: "top",
+            horizontal: "center",
+          } as SnackbarOrigin
+        }
+        open={errorWindow}
+        autoHideDuration={5000}
+        onClose={handleErrorSnackbarClose}
+      >
+        <Alert severity="error" onClose={handleErrorSnackbarClose}>
+          {Array.from(errors).map((err: string, index: number) => (
+            <p key={index}>{err}</p>
+          ))}
+        </Alert>
+      </Snackbar>
+
       <Avatar className={classes.avatar}>
         <LockOutlinedIcon />
       </Avatar>
@@ -99,6 +204,7 @@ const Login: React.FC = () => {
           id="email"
           label="Email Address"
           name="email"
+          type={"email"}
           autoComplete="email"
           autoFocus
           value={credentials.email || ""}
@@ -118,7 +224,14 @@ const Login: React.FC = () => {
           onChange={handleFormChange}
         />
         <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
+          control={
+            <Checkbox
+              value="remember"
+              color="primary"
+              checked={rememberMe}
+              onChange={handleRememberMe}
+            />
+          }
           label="Remember me"
         />
         <Button

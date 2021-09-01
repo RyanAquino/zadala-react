@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 import { Order } from "../Interfaces/Orders.interface";
 import default_image from "../static/default.jpg";
 import {
@@ -11,7 +12,12 @@ import {
   ProfileInterface,
 } from "../Interfaces/Profile.interface";
 import { ShippingAddress } from "../Interfaces/Shipping.interface";
-import { Authentication, User } from "../Interfaces/User.interface";
+import {
+  Authentication,
+  Registration,
+  TokenDetails,
+  User,
+} from "../Interfaces/User.interface";
 
 export const updateCart = (
   productId: number,
@@ -118,12 +124,35 @@ export const fetchProducts = async (
 export const authenticate = (auth: Authentication): Promise<User> => {
   return axios
     .post(`${process.env.REACT_APP_API_URL}/v1/auth/login/`, auth)
-    .then(({ data }) => data)
-    .catch((e) => e);
+    .then(({ data }) => data);
 };
 
 export const retrieveProduct = async (id: string): Promise<Product> => {
   return axios
     .get<Product>(`${process.env.REACT_APP_API_URL}/v1/products/${id}/`)
     .then(({ data }) => data);
+};
+
+export const register = (userInfo: Registration): Promise<JSON> => {
+  return axios
+    .post(
+      `${process.env.REACT_APP_API_URL}/v1/auth/customer/register/`,
+      userInfo
+    )
+    .then(({ data }) => data);
+};
+
+export const validateToken = (): boolean => {
+  const token = localStorage.getItem("token") || "";
+  const today = new Date();
+  const now = today.getTime();
+  let decoded = {} as TokenDetails;
+
+  try {
+    decoded = jwt_decode(token);
+    if (now <= decoded.exp) return false;
+  } catch (e) {
+    return false;
+  }
+  return true;
 };

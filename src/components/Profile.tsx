@@ -15,7 +15,11 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { getProfileDetails, updateProfileDetails } from "../api/utils";
+import {
+  getProfileDetails,
+  updateProfileDetails,
+  validateToken,
+} from "../api/utils";
 import { ProfileInterface } from "../Interfaces/Profile.interface";
 import Alert from "./Alerts";
 import { useHistory } from "react-router";
@@ -71,12 +75,7 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    if (
-      (localStorage.getItem("token") === null ||
-        localStorage.getItem("token") == "") &&
-      location.pathname === "/profile"
-    )
-      history.push("/login");
+    if (!validateToken()) history.push("/login");
     else {
       const fetchProfileDetails = async () => {
         const data = await getProfileDetails();

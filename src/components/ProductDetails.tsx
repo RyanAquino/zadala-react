@@ -16,7 +16,12 @@ import {
   SnackbarOrigin,
 } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { determineImage, retrieveProduct, updateCart } from "../api/utils";
+import {
+  determineImage,
+  retrieveProduct,
+  updateCart,
+  validateToken,
+} from "../api/utils";
 import Alert from "./Alerts";
 import { OrdersContext } from "../context/OrdersContext";
 import {
@@ -158,11 +163,7 @@ const ProductDetails: ({
                 color="primary"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (
-                    localStorage.getItem("token") === null ||
-                    localStorage.getItem("token") == ""
-                  )
-                    history.push("/login");
+                  if (!validateToken()) history.push("/login");
                   else processAddToCart().then();
                 }}
               >

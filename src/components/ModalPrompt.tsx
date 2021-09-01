@@ -2,6 +2,7 @@ import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Button, Modal } from "@material-ui/core";
 import { useHistory } from "react-router";
+import { validateToken } from "../api/utils";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,11 +40,7 @@ const ModalPrompt = ({ onConfirm }: { onConfirm: () => void }): JSX.Element => {
   };
 
   const addToCart = () => {
-    if (
-      localStorage.getItem("token") === null ||
-      localStorage.getItem("token") == ""
-    )
-      history.push("/login");
+    if (!validateToken()) history.push("/login");
     else onConfirm();
     setIsOpen(false);
   };
