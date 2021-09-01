@@ -18,11 +18,10 @@ import {
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
-import { determineImage, updateCart } from "../api/utils";
+import { determineImage, updateCart, validateToken } from "../api/utils";
 import Checkout from "../components/Checkout";
 import Alert from "./Alerts";
 import { useHistory } from "react-router";
-import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -63,19 +62,13 @@ const Cart: React.FC = () => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
   const [getTotalItems, setTotalItems] = React.useState(orderData.total_items);
-  const history = useHistory();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (
-      (localStorage.getItem("token") === null ||
-        localStorage.getItem("token") == "") &&
-      location.pathname === "/cart"
-    )
-      history.push("/login");
-  }, []);
   const products: OrderItem[] = orderData.products;
   const totalAmount: number = orderData.total_amount;
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!validateToken()) history.push("/login");
+  }, []);
 
   const processMaxQuantity = (product: OrderItem, action: string) => {
     product.product.isMax = action == "add";

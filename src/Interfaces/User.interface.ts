@@ -6,6 +6,7 @@ export interface User {
   last_name: string;
   refresh: string;
   access: string;
+  login?: boolean;
 }
 
 export interface UserContextInterface {
@@ -16,4 +17,18 @@ export interface UserContextInterface {
 export interface Authentication {
   email: string;
   password: string;
+}
+
+export interface Registration {
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+}
+
+export interface TokenDetails {
+  exp: bigint;
+  jti: string;
+  token_type: string;
+  user_id: number;
 }

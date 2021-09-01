@@ -1,9 +1,12 @@
-import { Grid } from "@material-ui/core";
+import { Grid, Snackbar, SnackbarOrigin } from "@material-ui/core";
 import Search from "./Search";
 import Products from "./Products";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import useProductSearch from "./useProductSearch";
+import { UserContextInterface } from "../Interfaces/User.interface";
+import { UserContext } from "../context/UserContext";
+import Alert from "./Alerts";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -25,9 +28,37 @@ const Home: React.FC = () => {
     pageNumber,
     setPageNumber,
   } = useProductSearch();
+  const { user, setUserData } = useContext<UserContextInterface>(UserContext);
+  const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    if (user.login) setOpen(true);
+  }, []);
+
+  const handleClose = () => {
+    setOpen(false);
+    setUserData({ ...user, login: false });
+  };
 
   return (
     <>
+      {user.login && (
+        <Snackbar
+          anchorOrigin={
+            {
+              vertical: "top",
+              horizontal: "center",
+            } as SnackbarOrigin
+          }
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+        >
+          <Alert severity="success" onClose={handleClose}>
+            Welcome {user.first_name} !
+          </Alert>
+        </Snackbar>
+      )}
       <Grid
         item
         container

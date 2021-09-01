@@ -6,14 +6,14 @@ import {
   makeStyles,
   withStyles,
 } from "@material-ui/core";
-import { Home, AccountCircle } from "@material-ui/icons";
+import { AccountCircle, Home } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import React, { useContext, useEffect } from "react";
 import { createStyles, Theme } from "@material-ui/core/styles";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { OrdersContext } from "../context/OrdersContext";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
-import { getOrders } from "../api/utils";
+import { getOrders, validateToken } from "../api/utils";
 
 const useStyles = makeStyles({
   root: {
@@ -44,6 +44,7 @@ const MobileNavigation: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!validateToken()) return;
     const fetchOrders = async () => await getOrders();
     fetchOrders().then((orderData) => {
       setOrderData(orderData);
