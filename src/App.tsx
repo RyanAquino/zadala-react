@@ -28,7 +28,7 @@ const App: React.FC = () => {
                 <HeaderBar />
               </Grid>
               <Grid item container xs={12} justify={"center"}>
-                <Route path={"/"} exact component={Home} />
+                <Route path={"/"} exact component={() => <Home />} />
                 <Route
                   path={"/login"}
                   exact

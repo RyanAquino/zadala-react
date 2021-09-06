@@ -7,6 +7,7 @@ export interface User {
   refresh: string;
   access: string;
   login?: boolean;
+  logout?: boolean;
 }
 
 export interface UserContextInterface {
@@ -27,7 +28,7 @@ export interface Registration {
 }
 
 export interface TokenDetails {
-  exp: bigint;
+  exp: number;
   jti: string;
   token_type: string;
   user_id: number;

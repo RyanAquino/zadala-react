@@ -150,7 +150,8 @@ export const validateToken = (): boolean => {
 
   try {
     decoded = jwt_decode(token);
-    if (now <= decoded.exp) return false;
+    const decodedMs = decoded.exp * 1000;
+    if (now >= decodedMs) return false;
   } catch (e) {
     return false;
   }
