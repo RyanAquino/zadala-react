@@ -103,7 +103,7 @@ const Login = ({
     });
 
     if (response) {
-      setUserData({ ...response, login: true });
+      setUserData({ ...response, login: true, logout: false });
       localStorage.setItem("token", response.access);
       const fetchOrders = async () => await getOrders();
       fetchOrders().then((orderData) => {

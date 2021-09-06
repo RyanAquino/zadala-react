@@ -4,7 +4,7 @@ import Products from "./Products";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import React, { useContext, useEffect } from "react";
 import useProductSearch from "./useProductSearch";
-import { UserContextInterface } from "../Interfaces/User.interface";
+import { User, UserContextInterface } from "../Interfaces/User.interface";
 import { UserContext } from "../context/UserContext";
 import Alert from "./Alerts";
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const Home: React.FC = () => {
+const Home = (): JSX.Element => {
   const classes = useStyles();
   const {
     setQuery,
@@ -35,30 +35,47 @@ const Home: React.FC = () => {
     if (user.login) setOpen(true);
   }, []);
 
-  const handleClose = () => {
+  const handleLoginClose = () => {
     setOpen(false);
     setUserData({ ...user, login: false });
   };
 
+  const handleLogoutClose = () => {
+    setUserData({ logout: false } as User);
+  };
+
   return (
     <>
-      {user.login && (
-        <Snackbar
-          anchorOrigin={
-            {
-              vertical: "top",
-              horizontal: "center",
-            } as SnackbarOrigin
-          }
-          open={open}
-          autoHideDuration={5000}
-          onClose={handleClose}
-        >
-          <Alert severity="success" onClose={handleClose}>
-            Welcome {user.first_name} !
-          </Alert>
-        </Snackbar>
-      )}
+      <Snackbar
+        anchorOrigin={
+          {
+            vertical: "top",
+            horizontal: "center",
+          } as SnackbarOrigin
+        }
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleLoginClose}
+      >
+        <Alert severity="success" onClose={handleLoginClose}>
+          Welcome {user.first_name} !
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={
+          {
+            vertical: "top",
+            horizontal: "center",
+          } as SnackbarOrigin
+        }
+        open={user.logout}
+        autoHideDuration={2000}
+        onClose={handleLogoutClose}
+      >
+        <Alert severity="success" onClose={handleLogoutClose}>
+          You have successfully logged out !
+        </Alert>
+      </Snackbar>
       <Grid
         item
         container

@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
 
   const handleLogout = () => {
     history.push("/");
-    setUserData({} as User);
+    setUserData({ logout: true } as User);
     setOrderData((prevOrder) => {
       return {
         ...prevOrder,
@@ -123,6 +123,47 @@ const Profile: React.FC = () => {
       </Snackbar>
       <Grid item className={classes.avatarRoot}>
         <Avatar className={classes.large} />
+        <Hidden xsDown>
+          {isEditing ? (
+            <>
+              <Button
+                variant="outlined"
+                startIcon={<CancelIcon />}
+                size={"large"}
+                color={"secondary"}
+                fullWidth
+                onClick={() => {
+                  setIsEditing(false);
+                  setReadonly(true);
+                  setProfileDetails(initialDetails);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+                size={"large"}
+                fullWidth
+                onClick={() => saveProfile()}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              size={"large"}
+              color={"primary"}
+              fullWidth
+              onClick={() => editProfile()}
+            >
+              Edit
+            </Button>
+          )}
+        </Hidden>
       </Grid>
       <Grid item className={classes.fieldsRoot}>
         <Card>
