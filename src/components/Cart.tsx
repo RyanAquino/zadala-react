@@ -18,7 +18,12 @@ import {
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
-import { determineImage, updateCart, validateToken } from "../api/utils";
+import {
+  determineImage,
+  getOrders,
+  updateCart,
+  validateToken,
+} from "../api/utils";
 import Checkout from "../components/Checkout";
 import Alert from "./Alerts";
 import { useHistory } from "react-router";
@@ -68,6 +73,13 @@ const Cart: React.FC = () => {
 
   useEffect(() => {
     if (!validateToken()) history.push("/login");
+    if (Object.entries(orderData).length === 0) {
+      const fetchOrders = async () => await getOrders();
+      fetchOrders().then((orderData) => {
+        setOrderData(orderData);
+        setTotalItems(orderData.total_items);
+      });
+    }
   }, []);
 
   const processMaxQuantity = (product: OrderItem, action: string) => {
