@@ -7,9 +7,9 @@ import {
   Card,
   Avatar,
   TextField,
-  Hidden,
   Snackbar,
   SnackbarOrigin,
+  Typography,
 } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EditIcon from "@material-ui/icons/Edit";
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 275,
     },
     fieldsRoot: {
-      padding: "5px 5px",
+      padding: "10px",
     },
     avatarRoot: {
       padding: "5px 5px",
@@ -105,7 +105,7 @@ const Profile: React.FC = () => {
   const handleDate = (date: string) => new Date(date).toDateString();
 
   return (
-    <Grid item container justify={"center"}>
+    <Grid item container justify={"center"} xs={12}>
       <Snackbar
         anchorOrigin={
           {
@@ -121,175 +121,171 @@ const Profile: React.FC = () => {
           Profile Updated
         </Alert>
       </Snackbar>
-      <Grid item className={classes.avatarRoot}>
-        <Avatar className={classes.large} />
-        <Hidden xsDown>
-          {isEditing ? (
-            <>
-              <Button
-                variant="outlined"
-                startIcon={<CancelIcon />}
-                size={"large"}
-                color={"secondary"}
-                fullWidth
-                onClick={() => {
-                  setIsEditing(false);
-                  setReadonly(true);
-                  setProfileDetails(initialDetails);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-                size={"large"}
-                fullWidth
-                onClick={() => saveProfile()}
-              >
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="outlined"
-              startIcon={<EditIcon />}
-              size={"large"}
-              color={"primary"}
-              fullWidth
-              onClick={() => editProfile()}
-            >
-              Edit
-            </Button>
-          )}
-        </Hidden>
-      </Grid>
-      <Grid item className={classes.fieldsRoot}>
-        <Card>
-          <CardContent>
-            <TextField
-              id="email"
-              fullWidth
-              type={"email"}
-              label="Email Address"
-              name={"email"}
-              value={profileDetails.email || ""}
-              onChange={handleFormChange}
-              inputRef={inputRef}
-              InputProps={{
-                readOnly: readOnly,
-              }}
-            />
-            <TextField
-              id="first-name"
-              label="First Name"
-              fullWidth
-              name={"first_name"}
-              value={profileDetails.first_name || ""}
-              onChange={handleFormChange}
-              InputProps={{
-                readOnly: readOnly,
-              }}
-            />
-            <TextField
-              id="last-name"
-              label="Last Name"
-              name={"last_name"}
-              fullWidth
-              value={profileDetails.last_name || ""}
-              onChange={handleFormChange}
-              InputProps={{
-                readOnly: readOnly,
-              }}
-            />
-            <TextField
-              id="password"
-              label="Password"
-              type="password"
-              name={"password"}
-              autoComplete="current-password"
-              fullWidth
-              onChange={handleFormChange}
-              InputProps={{
-                readOnly: readOnly,
-              }}
-            />
-            <TextField
-              disabled
-              id="member-since"
-              label="Member Since"
-              value={handleDate(profileDetails.date_joined) || ""}
-              onChange={handleFormChange}
-              fullWidth
-            />
-            <TextField
-              disabled
-              id="last-login"
-              label="Last Login"
-              value={handleDate(profileDetails.last_login) || ""}
-              fullWidth
-            />
-          </CardContent>
-        </Card>
-      </Grid>
-      <Hidden smUp>
-        <Grid item xs={12} container spacing={1} justify={"center"}>
+      <Card style={{ width: "80%" }}>
+        <CardContent>
           <Grid item container xs={12}>
-            {isEditing ? (
-              <Grid item xs={12}>
-                <Button
-                  variant="outlined"
-                  startIcon={<CancelIcon />}
-                  size={"large"}
-                  color={"secondary"}
+            <Grid
+              item
+              container
+              sm={6}
+              alignItems={"center"}
+              direction="column"
+            >
+              <Avatar className={classes.large} />
+              <Typography variant="h5" component="h2" gutterBottom>
+                {profileDetails.first_name} {profileDetails.last_name}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              container
+              justify={"center"}
+              xs={12}
+              sm={6}
+              alignItems="center"
+            >
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <TextField
+                  id="email"
                   fullWidth
-                  onClick={() => {
-                    setIsEditing(false);
-                    setReadonly(true);
-                    setProfileDetails(initialDetails);
+                  type={"email"}
+                  label="Email Address"
+                  name={"email"}
+                  variant={"outlined"}
+                  value={profileDetails.email || ""}
+                  onChange={handleFormChange}
+                  inputRef={inputRef}
+                  InputProps={{
+                    readOnly: readOnly,
                   }}
-                >
-                  Cancel
-                </Button>
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <TextField
+                  id="first-name"
+                  label="First Name"
+                  fullWidth
+                  name={"first_name"}
+                  value={profileDetails.first_name || ""}
+                  onChange={handleFormChange}
+                  variant={"outlined"}
+                  InputProps={{
+                    readOnly: readOnly,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <TextField
+                  id="last-name"
+                  label="Last Name"
+                  name={"last_name"}
+                  variant={"outlined"}
+                  fullWidth
+                  value={profileDetails.last_name || ""}
+                  onChange={handleFormChange}
+                  InputProps={{
+                    readOnly: readOnly,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <TextField
+                  id="password"
+                  label="Password"
+                  type="password"
+                  name={"password"}
+                  autoComplete="current-password"
+                  fullWidth
+                  variant={"outlined"}
+                  onChange={handleFormChange}
+                  InputProps={{
+                    readOnly: readOnly,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <TextField
+                  disabled
+                  id="member-since"
+                  label="Member Since"
+                  variant={"outlined"}
+                  value={handleDate(profileDetails.date_joined) || ""}
+                  onChange={handleFormChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <TextField
+                  disabled
+                  id="last-login"
+                  label="Last Login"
+                  variant={"outlined"}
+                  value={handleDate(profileDetails.last_login) || ""}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
+                <Grid item container xs={12}>
+                  {isEditing ? (
+                    <Grid item xs={12}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<CancelIcon />}
+                        size={"large"}
+                        color={"secondary"}
+                        fullWidth
+                        onClick={() => {
+                          setIsEditing(false);
+                          setReadonly(true);
+                          setProfileDetails(initialDetails);
+                        }}
+                        style={{ marginBottom: 8 }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<SaveIcon />}
+                        size={"large"}
+                        fullWidth
+                        onClick={() => saveProfile()}
+                      >
+                        Save
+                      </Button>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<EditIcon />}
+                        size={"large"}
+                        color={"primary"}
+                        fullWidth
+                        onClick={() => editProfile()}
+                      >
+                        Edit
+                      </Button>
+                    </Grid>
+                  )}
+                </Grid>
+              </Grid>
+              <Grid item xs={12} className={classes.fieldsRoot}>
                 <Button
                   variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
+                  color="secondary"
+                  startIcon={<ExitToAppIcon />}
                   size={"large"}
                   fullWidth
-                  onClick={() => saveProfile()}
+                  onClick={() => handleLogout()}
                 >
-                  Save
+                  Logout
                 </Button>
               </Grid>
-            ) : (
-              <Button
-                variant="outlined"
-                startIcon={<EditIcon />}
-                size={"large"}
-                color={"primary"}
-                fullWidth
-                onClick={() => editProfile()}
-              >
-                Edit
-              </Button>
-            )}
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<ExitToAppIcon />}
-              size={"large"}
-              fullWidth
-              onClick={() => handleLogout()}
-            >
-              Logout
-            </Button>
-          </Grid>
-        </Grid>
-      </Hidden>
+        </CardContent>
+      </Card>
     </Grid>
   );
 };
