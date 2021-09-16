@@ -110,27 +110,40 @@ const ProductDetails: ({
 
   return (
     <Container maxWidth={"lg"}>
-      <Snackbar
-        anchorOrigin={
-          {
-            vertical: "top",
-            horizontal: "center",
-          } as SnackbarOrigin
-        }
-        open={open}
-        autoHideDuration={5000}
-        onClose={handleClose}
-      >
-        {isSuccess ? (
+      {isSuccess && (
+        <Snackbar
+          anchorOrigin={
+            {
+              vertical: "top",
+              horizontal: "center",
+            } as SnackbarOrigin
+          }
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+        >
           <Alert severity="success" onClose={handleClose}>
             Added to cart
           </Alert>
-        ) : (
+        </Snackbar>
+      )}
+      {!isSuccess && (
+        <Snackbar
+          open={open}
+          anchorOrigin={
+            {
+              vertical: "top",
+              horizontal: "center",
+            } as SnackbarOrigin
+          }
+          autoHideDuration={5000}
+          onClose={handleClose}
+        >
           <Alert severity="warning" onClose={handleClose}>
             You have reached the maximum quantity available for this item
           </Alert>
-        )}
-      </Snackbar>
+        </Snackbar>
+      )}
       <Grid item container justify={"center"} spacing={1}>
         <Grid item sm={4} md={3}>
           <Paper elevation={3} variant={"outlined"}>
