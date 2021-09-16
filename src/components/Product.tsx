@@ -57,7 +57,7 @@ const Product: React.FC<{
     const [orderItem, ...rest] = orderItems.filter(
       (item: OrderItem) => item.product.id === product.id
     );
-    if (!orderItem || ++orderItem.quantity <= orderItem.product.quantity) {
+    if (!orderItem || orderItem.quantity + 1 <= orderItem.product.quantity) {
       onClick(true);
       const response = await updateCart(product.id, "add");
       setOrderData(response);

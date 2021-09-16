@@ -99,7 +99,7 @@ const ProductDetails: ({
     const [orderItem, ...rest] = orderItems.filter(
       (item: OrderItem) => item.product.id === product.id
     );
-    if (!orderItem || ++orderItem.quantity <= orderItem.product.quantity) {
+    if (!orderItem || orderItem.quantity + 1 <= orderItem.product.quantity) {
       handleClick(true);
       const response = await updateCart(product.id, "add");
       setOrderData(response);
@@ -157,16 +157,16 @@ const ProductDetails: ({
         <Grid item xs={12} sm={8} md={9}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
+              <Typography variant="h5" component="h2" gutterBottom>
+                {product.name}
+              </Typography>
               <Typography color="textSecondary" gutterBottom>
                 ₱{product.price}
               </Typography>
-              <Typography variant="h5" component="h2">
-                {product.name}
+              <Typography variant="subtitle1" component="h6" gutterBottom>
+                {product.quantity} piece available
               </Typography>
-              <Typography variant="h5" component="h2">
-                {product.quantity}
-              </Typography>
-              <Typography color="textSecondary">
+              <Typography color="textSecondary" gutterBottom>
                 {product.description}
               </Typography>
             </CardContent>
