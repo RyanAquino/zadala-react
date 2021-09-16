@@ -46,7 +46,7 @@ const ModalPrompt = ({ onConfirm }: { onConfirm: () => void }): JSX.Element => {
   };
 
   return (
-    <div>
+    <>
       <Button
         type="button"
         variant="contained"
@@ -70,7 +70,7 @@ const ModalPrompt = ({ onConfirm }: { onConfirm: () => void }): JSX.Element => {
           </Button>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 
