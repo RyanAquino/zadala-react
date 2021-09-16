@@ -5,9 +5,12 @@ import {
   Button,
   Box,
   Hidden,
+  IconButton,
+  Badge,
+  withStyles,
 } from "@material-ui/core";
-import React, { useContext } from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import React, { useContext, useEffect } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
   AccountCircle,
@@ -20,8 +23,9 @@ import { useHistory } from "react-router";
 import { UserContext } from "../context/UserContext";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { OrdersContext } from "../context/OrdersContext";
-import { validateToken } from "../api/utils";
+import { getOrders, validateToken } from "../api/utils";
 // import zadala_logo from "../assets/zadala-logo.png";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -32,11 +36,24 @@ const useStyles = makeStyles(() =>
   })
 );
 
+const StyledBadge = withStyles((theme: Theme) =>
+  createStyles({
+    badge: {
+      right: -3,
+      top: 13,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: "0 4px",
+    },
+  })
+)(Badge);
+
 const HeaderBar = (): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
   const { setUserData } = useContext<UserContextInterface>(UserContext);
-  const { setOrderData } = useContext<OrdersContextInterface>(OrdersContext);
+  const { orderData, setOrderData } = useContext<OrdersContextInterface>(
+    OrdersContext
+  );
 
   const handleLogout = () => {
     history.push("/");
@@ -49,6 +66,14 @@ const HeaderBar = (): JSX.Element => {
     localStorage.removeItem("token");
     setUserData({ logout: true } as User);
   };
+
+  useEffect(() => {
+    if (!validateToken()) return;
+    const fetchOrders = async () => await getOrders();
+    fetchOrders().then((orderData) => {
+      setOrderData(orderData);
+    });
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -68,7 +93,11 @@ const HeaderBar = (): JSX.Element => {
                 Home
               </Button>
               <Button
-                startIcon={<ShoppingCart />}
+                startIcon={
+                  <Badge badgeContent={orderData.total_items} color="secondary">
+                    <ShoppingCartIcon />
+                  </Badge>
+                }
                 color="inherit"
                 component={Link}
                 to={"/cart"}

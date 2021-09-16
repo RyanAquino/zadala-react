@@ -94,7 +94,7 @@ const Cart: React.FC = () => {
   const processAddToCart = async (product: OrderItem): Promise<void> => {
     const productCopy = { ...product };
     const action = "add";
-    if (++productCopy.quantity <= product.product.quantity) {
+    if (productCopy.quantity + 1 <= product.product.quantity) {
       const response = await updateCart(product.product.id, action);
       setOrderData(response);
     } else {
