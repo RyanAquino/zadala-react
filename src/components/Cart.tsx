@@ -10,6 +10,8 @@ import {
   CardMedia,
   SnackbarOrigin,
   Snackbar,
+  Box,
+  Tooltip,
 } from "@material-ui/core";
 import {
   OrderItem,
@@ -41,7 +43,7 @@ const useStyles = makeStyles({
     width: "100%",
   },
   cover: {
-    width: "50%",
+    width: "100%",
     height: "100%",
   },
   orderItemContainer: {
@@ -57,6 +59,30 @@ const useStyles = makeStyles({
   },
   summaryGrid: {
     paddingBottom: "10px",
+  },
+  portCardClParent: {
+    display: "flex",
+    flexDirection: "row",
+    height: "100%",
+    width: "100%",
+  },
+  portCardCl: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    flexBasis: "100%",
+    flex: 1,
+  },
+  portBodyCl: {
+    display: "flex",
+    flex: "1 0 auto",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    flexDirection: "column",
+  },
+  portButCl: {
+    display: "flex",
+    justifyContent: "flex-start",
   },
 });
 
@@ -85,8 +111,8 @@ const Cart: React.FC = () => {
   const processMaxQuantity = (product: OrderItem, action: string) => {
     product.product.isMax = action == "add";
     return {
-      total_items: getTotalItems,
-      total_amount: totalAmount,
+      total_items: orderData.total_items,
+      total_amount: orderData.total_amount,
       products: [...products],
     };
   };
@@ -168,13 +194,13 @@ const Cart: React.FC = () => {
                 item
                 xs={12}
                 sm={6}
-                md={4}
+                lg={4}
                 key={index}
                 className={classes.orderItemContainer}
               >
-                <Card className={classes.root}>
-                  <div className={classes.details}>
-                    <CardContent>
+                <Card className={classes.portCardClParent}>
+                  <Box className={classes.portCardCl}>
+                    <CardContent className={classes.portBodyCl}>
                       <Typography variant="subtitle1" component="h6">
                         {product.product.name}
                       </Typography>
@@ -190,30 +216,36 @@ const Cart: React.FC = () => {
                           : null}
                       </Typography>
                     </CardContent>
-                    <CardActions>
-                      <IconButton
-                        aria-label="add"
-                        color="primary"
-                        onClick={() => processAddToCart(product)}
-                      >
-                        <AddShoppingCartIcon fontSize={"large"} />
-                      </IconButton>
-                      <IconButton
-                        aria-label="delete"
-                        color="secondary"
-                        onClick={() => processRemoveToCart(product)}
-                      >
-                        <RemoveShoppingCartIcon fontSize={"large"} />
-                      </IconButton>
+                    <CardActions className={classes.portButCl}>
+                      <Tooltip title={"Add to cart"} arrow>
+                        <IconButton
+                          aria-label="add"
+                          color="primary"
+                          onClick={() => processAddToCart(product)}
+                        >
+                          <AddShoppingCartIcon fontSize={"large"} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={"Remove to cart"} arrow>
+                        <IconButton
+                          aria-label="delete"
+                          color="secondary"
+                          onClick={() => processRemoveToCart(product)}
+                        >
+                          <RemoveShoppingCartIcon fontSize={"large"} />
+                        </IconButton>
+                      </Tooltip>
                     </CardActions>
-                  </div>
-                  <CardMedia
-                    className={classes.cover}
-                    component="img"
-                    height={"140"}
-                    image={determineImage(product.product)}
-                    title="Product image"
-                  />
+                  </Box>
+                  <Box className={classes.portCardCl}>
+                    <CardMedia
+                      className={classes.cover}
+                      component="img"
+                      height={"140"}
+                      image={determineImage(product.product)}
+                      title="Product image"
+                    />
+                  </Box>
                 </Card>
               </Grid>
             );
