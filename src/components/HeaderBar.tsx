@@ -5,27 +5,20 @@ import {
   Button,
   Box,
   Hidden,
-  IconButton,
   Badge,
-  withStyles,
 } from "@material-ui/core";
 import React, { useContext, useEffect } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import {
-  AccountCircle,
-  Home,
-  ShoppingCart,
-  ExitToApp,
-} from "@material-ui/icons";
+import { AccountCircle, Home, ExitToApp } from "@material-ui/icons";
 import { User, UserContextInterface } from "../Interfaces/User.interface";
 import { useHistory } from "react-router";
 import { UserContext } from "../context/UserContext";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { OrdersContext } from "../context/OrdersContext";
 import { getOrders, validateToken } from "../api/utils";
-// import zadala_logo from "../assets/zadala-logo.png";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+// import zadala_logo from "../assets/zadala-logo.png";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -35,17 +28,6 @@ const useStyles = makeStyles(() =>
     },
   })
 );
-
-const StyledBadge = withStyles((theme: Theme) =>
-  createStyles({
-    badge: {
-      right: -3,
-      top: 13,
-      border: `2px solid ${theme.palette.background.paper}`,
-      padding: "0 4px",
-    },
-  })
-)(Badge);
 
 const HeaderBar = (): JSX.Element => {
   const classes = useStyles();
