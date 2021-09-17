@@ -34,6 +34,23 @@ const useStyles = makeStyles({
     height: "100%",
     width: "100%",
   },
+  portCardCl: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    width: "100%",
+  },
+  portBodyCl: {
+    display: "flex",
+    flex: "1 0 auto",
+    alignItems: "flex-end",
+    justifyContent: "center",
+    flexDirection: "column",
+  },
+  portButCl: {
+    display: "flex",
+    justifyContent: "flex-start",
+  },
 });
 
 const Product: React.FC<{
@@ -67,7 +84,7 @@ const Product: React.FC<{
   };
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.portCardCl}>
       <CardActionArea
         component={Link}
         to={{
@@ -76,6 +93,7 @@ const Product: React.FC<{
             product: product,
           },
         }}
+        className={classes.portBodyCl}
       >
         <CardMedia
           className={classes.media}
@@ -85,7 +103,7 @@ const Product: React.FC<{
           title="Product image"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="subtitle1" component="h2">
             {product.name}
           </Typography>
           <Typography gutterBottom variant="h6" component="h2">
@@ -93,7 +111,7 @@ const Product: React.FC<{
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      <CardActions className={classes.portButCl}>
         <ModalPrompt onConfirm={() => handleConfirm(product)} />
       </CardActions>
     </Card>

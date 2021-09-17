@@ -15,8 +15,6 @@ import {
   OrderItem,
   OrdersContextInterface,
 } from "../Interfaces/Orders.interface";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
 import {
   determineImage,
@@ -27,6 +25,8 @@ import {
 import Checkout from "../components/Checkout";
 import Alert from "./Alerts";
 import { useHistory } from "react-router";
+import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
+import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 
 const useStyles = makeStyles({
   root: {
@@ -175,7 +175,7 @@ const Cart: React.FC = () => {
                 <Card className={classes.root}>
                   <div className={classes.details}>
                     <CardContent>
-                      <Typography variant="h5" component="h6">
+                      <Typography variant="subtitle1" component="h6">
                         {product.product.name}
                       </Typography>
                       <Typography color="textSecondary">
@@ -196,14 +196,14 @@ const Cart: React.FC = () => {
                         color="primary"
                         onClick={() => processAddToCart(product)}
                       >
-                        <AddCircleIcon fontSize={"large"} />
+                        <AddShoppingCartIcon fontSize={"large"} />
                       </IconButton>
                       <IconButton
                         aria-label="delete"
                         color="secondary"
                         onClick={() => processRemoveToCart(product)}
                       >
-                        <RemoveCircleIcon fontSize={"large"} />
+                        <RemoveShoppingCartIcon fontSize={"large"} />
                       </IconButton>
                     </CardActions>
                   </div>
