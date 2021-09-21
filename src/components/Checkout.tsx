@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      overflow: "scroll"
     },
     paper: {
       backgroundColor: theme.palette.background.paper,
@@ -254,7 +255,7 @@ const Checkout = ({
   };
 
   return (
-    <div>
+    <>
       <Button
         type="button"
         variant="contained"
@@ -277,7 +278,7 @@ const Checkout = ({
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper}>
+          <Box className={classes.paper}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => (
                 <Step key={label}>
@@ -286,13 +287,17 @@ const Checkout = ({
                     <Grid container>{getStepContent(index)}</Grid>
                     <div className={classes.actionsContainer}>
                       <div>
-                        <Button
-                          disabled={activeStep === 0}
-                          onClick={handleBack}
-                          className={classes.button}
-                        >
-                          Back
-                        </Button>
+                        {
+                          activeStep !== 0 && (
+                              <Button
+                                  disabled={activeStep === 0}
+                                  onClick={handleBack}
+                                  className={classes.button}
+                              >
+                                Back
+                              </Button>
+                          )
+                        }
                         <Button
                           variant="contained"
                           color="primary"
@@ -309,10 +314,10 @@ const Checkout = ({
                 </Step>
               ))}
             </Stepper>
-          </div>
+          </Box>
         </Fade>
       </Modal>
-    </div>
+    </>
   );
 };
 
