@@ -39,6 +39,7 @@ const ModalPrompt = ({ onConfirm }: { onConfirm: () => void }): JSX.Element => {
         onClose={() => setIsOpen(false)}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
+        disableScrollLock={true}
       >
         <DialogTitle>Add to cart</DialogTitle>
         <DialogContent>
