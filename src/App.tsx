@@ -10,7 +10,6 @@ import { UserProvider } from "./context/UserContext";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import React, { useState } from "react";
 import HeaderBar from "./components/HeaderBar";
-import ModalPrompt from "./components/ModalPrompt";
 import { OrdersProvider } from "./context/OrdersContext";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -48,7 +47,6 @@ const App: React.FC = () => {
                   exact
                   component={ProductDetails}
                 />
-                <Route path={"/modal"} exact component={ModalPrompt} />
               </Grid>
               <Grid item container>
                 <Hidden smUp>

@@ -1,8 +1,5 @@
 import React, { Dispatch, useContext, useState } from "react";
 import {
-  Fade,
-  Backdrop,
-  Modal,
   Button,
   createStyles,
   makeStyles,
@@ -15,6 +12,9 @@ import {
   TextField,
   Grid,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@material-ui/core";
 import {
   Order,
@@ -28,11 +28,10 @@ import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    modal: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      overflow: "scroll"
+    dialog: {
+      position: "absolute",
+      top: 0,
+      width: "90%",
     },
     paper: {
       backgroundColor: theme.palette.background.paper,
@@ -49,9 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     actionsContainer: {
       marginBottom: theme.spacing(2),
-    },
-    resetContainer: {
-      padding: theme.spacing(3),
     },
   })
 );
@@ -246,12 +242,12 @@ const Checkout = ({
     setActiveStep(0);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
   return (
@@ -260,63 +256,54 @@ const Checkout = ({
         type="button"
         variant="contained"
         color="primary"
-        onClick={handleOpen}
+        onClick={handleClickOpen}
         disabled={getTotalItems === 0 || getTotalItems === undefined}
       >
         Checkout
       </Button>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
+      <Dialog
         onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        classes={{ paper: classes.dialog }}
       >
-        <Fade in={open}>
-          <Box className={classes.paper}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map((label, index) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                  <StepContent>
-                    <Grid container>{getStepContent(index)}</Grid>
-                    <div className={classes.actionsContainer}>
-                      <div>
-                        {
-                          activeStep !== 0 && (
-                              <Button
-                                  disabled={activeStep === 0}
-                                  onClick={handleBack}
-                                  className={classes.button}
-                              >
-                                Back
-                              </Button>
-                          )
-                        }
+        <DialogTitle id="customized-dialog-title">Checkout</DialogTitle>
+        <DialogContent dividers>
+          <Stepper activeStep={activeStep} orientation="vertical">
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <Grid container>{getStepContent(index)}</Grid>
+                  <div className={classes.actionsContainer}>
+                    <div>
+                      {activeStep !== 0 && (
                         <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleNext}
+                          disabled={activeStep === 0}
+                          onClick={handleBack}
                           className={classes.button}
                         >
-                          {activeStep === steps.length - 1
-                            ? "Place Order"
-                            : "Next"}
+                          Back
                         </Button>
-                      </div>
+                      )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                        className={classes.button}
+                      >
+                        {activeStep === steps.length - 1
+                          ? "Place Order"
+                          : "Next"}
+                      </Button>
                     </div>
-                  </StepContent>
-                </Step>
-              ))}
-            </Stepper>
-          </Box>
-        </Fade>
-      </Modal>
+                  </div>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
