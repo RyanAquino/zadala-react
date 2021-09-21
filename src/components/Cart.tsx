@@ -226,7 +226,7 @@ const Cart: React.FC = () => {
                           <AddShoppingCartIcon fontSize={"large"} />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title={"Remove to cart"} arrow>
+                      <Tooltip title={"Remove from cart"} arrow>
                         <IconButton
                           aria-label="delete"
                           color="secondary"
