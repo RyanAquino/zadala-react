@@ -4,9 +4,9 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  makeStyles,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { useContext } from "react";
 import { Product as ProductType } from "../Interfaces/Product.interface";
 import { Link } from "react-router-dom";

@@ -3,14 +3,15 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
-  makeStyles,
-  withStyles,
-} from "@material-ui/core";
-import { AccountCircle, Home } from "@material-ui/icons";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import withStyles from "@mui/styles/withStyles";
+import { AccountCircle, Home } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import React, { useContext, useEffect } from "react";
-import { createStyles, Theme } from "@material-ui/core/styles";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import { Theme } from "@mui/material/styles";
+import createStyles from "@mui/styles/createStyles";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { OrdersContext } from "../context/OrdersContext";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { getOrders, validateToken } from "../api/utils";
@@ -63,7 +64,7 @@ const MobileNavigation: React.FC = () => {
         <BottomNavigationAction
           label="Cart"
           icon={
-            <StyledBadge badgeContent={orderData.total_items} color="secondary">
+            <StyledBadge badgeContent={orderData.total_items} color="error">
               <ShoppingCartIcon />
             </StyledBadge>
           }

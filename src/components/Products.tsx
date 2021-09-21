@@ -7,10 +7,10 @@ import { ProductsContext } from "../context/ProductsContext";
 import {
   CircularProgress,
   Grid,
-  makeStyles,
   Snackbar,
   SnackbarOrigin,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { useCallback, useRef, useContext, Dispatch } from "react";
 import Alert from "./Alerts";
 const useStyles = makeStyles({
@@ -47,6 +47,7 @@ const Products = ({
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
+      setOpen(false);
       return;
     }
     setIsSuccess(false);
@@ -71,7 +72,12 @@ const Products = ({
   );
 
   return (
-    <Grid item container className={classes.gridContainer} justify={"center"}>
+    <Grid
+      item
+      container
+      className={classes.gridContainer}
+      justifyContent={"center"}
+    >
       {isSuccess && (
         <Snackbar
           anchorOrigin={

@@ -6,18 +6,19 @@ import {
   Box,
   Hidden,
   Badge,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useContext, useEffect } from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import { Link } from "react-router-dom";
-import { AccountCircle, Home, ExitToApp } from "@material-ui/icons";
+import { AccountCircle, Home, ExitToApp } from "@mui/icons-material";
 import { User, UserContextInterface } from "../Interfaces/User.interface";
 import { useHistory } from "react-router";
 import { UserContext } from "../context/UserContext";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { OrdersContext } from "../context/OrdersContext";
 import { getOrders, validateToken } from "../api/utils";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 // import zadala_logo from "../assets/zadala-logo.png";
 
 const useStyles = makeStyles(() =>
@@ -64,7 +65,7 @@ const HeaderBar = (): JSX.Element => {
           <Box display="flex" flexGrow={1}>
             <Typography variant="h5">Zadala</Typography>
           </Box>
-          <Hidden xsDown>
+          <Hidden mdDown>
             <Box display="flex" flexGrow={2} justifyContent={"space-evenly"}>
               <Button
                 startIcon={<Home />}
@@ -76,7 +77,7 @@ const HeaderBar = (): JSX.Element => {
               </Button>
               <Button
                 startIcon={
-                  <Badge badgeContent={orderData.total_items} color="secondary">
+                  <Badge badgeContent={orderData.total_items} color="error">
                     <ShoppingCartIcon />
                   </Badge>
                 }

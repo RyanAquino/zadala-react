@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import createStyles from "@mui/styles/createStyles";
 import {
   Grid,
   Button,
@@ -10,11 +12,11 @@ import {
   Snackbar,
   SnackbarOrigin,
   Typography,
-} from "@material-ui/core";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import EditIcon from "@material-ui/icons/Edit";
-import SaveIcon from "@material-ui/icons/Save";
-import CancelIcon from "@material-ui/icons/Cancel";
+} from "@mui/material";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
   getProfileDetails,
   updateProfileDetails,
@@ -105,7 +107,7 @@ const Profile: React.FC = () => {
   const handleDate = (date: string) => new Date(date).toDateString();
 
   return (
-    <Grid item container justify={"center"} xs={12}>
+    <Grid item container justifyContent={"center"} xs={12}>
       <Snackbar
         anchorOrigin={
           {
@@ -139,7 +141,7 @@ const Profile: React.FC = () => {
             <Grid
               item
               container
-              justify={"center"}
+              justifyContent={"center"}
               xs={12}
               sm={6}
               alignItems="center"
@@ -232,7 +234,7 @@ const Profile: React.FC = () => {
                         variant="outlined"
                         startIcon={<CancelIcon />}
                         size={"large"}
-                        color={"secondary"}
+                        color={"error"}
                         fullWidth
                         onClick={() => {
                           setIsEditing(false);
@@ -273,7 +275,7 @@ const Profile: React.FC = () => {
               <Grid item xs={12} className={classes.fieldsRoot}>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="error"
                   startIcon={<ExitToAppIcon />}
                   size={"large"}
                   fullWidth
