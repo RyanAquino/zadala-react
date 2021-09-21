@@ -1,8 +1,6 @@
 import React, { Dispatch, useContext, useState } from "react";
 import {
   Button,
-  createStyles,
-  makeStyles,
   Stepper,
   Step,
   StepLabel,
@@ -15,7 +13,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-} from "@material-ui/core";
+} from "@mui/material";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import {
   Order,
   OrderItem,

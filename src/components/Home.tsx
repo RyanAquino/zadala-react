@@ -1,7 +1,8 @@
-import { Grid, Snackbar, SnackbarOrigin } from "@material-ui/core";
+import { Grid, Snackbar, SnackbarOrigin } from "@mui/material";
 import Search from "./Search";
 import Products from "./Products";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { useContext, useEffect } from "react";
 import useProductSearch from "./useProductSearch";
 import { User, UserContextInterface } from "../Interfaces/User.interface";
@@ -81,7 +82,7 @@ const Home = (): JSX.Element => {
         container
         xs={12}
         sm={8}
-        justify={"center"}
+        justifyContent={"center"}
         className={classes.root}
       >
         <Search setPageNumber={setPageNumber} setQuery={setQuery} />
@@ -93,7 +94,7 @@ const Home = (): JSX.Element => {
         xs={12}
         sm={10}
         md={8}
-        justify={"center"}
+        justifyContent={"center"}
       >
         <Products
           loading={loading}

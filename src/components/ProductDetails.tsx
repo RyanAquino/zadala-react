@@ -14,8 +14,9 @@ import {
   Typography,
   Snackbar,
   SnackbarOrigin,
-} from "@material-ui/core";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+} from "@mui/material";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import {
   determineImage,
   retrieveProduct,
@@ -87,6 +88,7 @@ const ProductDetails: ({
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
+      setOpen(false);
       return;
     }
     setIsSuccess(false);
@@ -144,9 +146,9 @@ const ProductDetails: ({
           </Alert>
         </Snackbar>
       )}
-      <Grid item container justify={"center"} spacing={1}>
+      <Grid item container justifyContent={"center"} spacing={1}>
         <Grid item sm={4} md={3}>
-          <Paper elevation={3} variant={"outlined"}>
+          <Paper elevation={0} variant={"outlined"}>
             <img
               src={determineImage(product)}
               alt="Product image"

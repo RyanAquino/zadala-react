@@ -7,13 +7,13 @@ import {
   Container,
   Grid,
   Link,
-  makeStyles,
   Snackbar,
   SnackbarOrigin,
   TextField,
   Typography,
-} from "@material-ui/core";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Registration } from "../Interfaces/User.interface";
 import { useHistory } from "react-router";
 import { register } from "../api/utils";

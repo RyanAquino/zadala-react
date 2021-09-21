@@ -6,18 +6,18 @@ import {
   CardContent,
   Typography,
   CardActions,
-  makeStyles,
   CardMedia,
   SnackbarOrigin,
   Snackbar,
   Box,
   Tooltip,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import {
   OrderItem,
   OrdersContextInterface,
 } from "../Interfaces/Orders.interface";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import {
   determineImage,
   getOrders,
@@ -27,8 +27,8 @@ import {
 import Checkout from "../components/Checkout";
 import Alert from "./Alerts";
 import { useHistory } from "react-router";
-import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
-import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 const useStyles = makeStyles({
   root: {
@@ -141,7 +141,7 @@ const Cart: React.FC = () => {
     <Grid
       item
       container
-      justify={"center"}
+      justifyContent={"center"}
       className={classes.orderItemsGrid}
       xs={12}
       md={10}
@@ -186,7 +186,7 @@ const Cart: React.FC = () => {
           </CardActions>
         </Card>
       </Grid>
-      <Grid item container justify={"center"}>
+      <Grid item container justifyContent={"center"}>
         {totalAmount ? (
           products.map((product: OrderItem, index: number) => {
             return (
@@ -222,6 +222,7 @@ const Cart: React.FC = () => {
                           aria-label="add"
                           color="primary"
                           onClick={() => processAddToCart(product)}
+                          size="large"
                         >
                           <AddShoppingCartIcon fontSize={"large"} />
                         </IconButton>
@@ -229,8 +230,9 @@ const Cart: React.FC = () => {
                       <Tooltip title={"Remove from cart"} arrow>
                         <IconButton
                           aria-label="delete"
-                          color="secondary"
+                          color="error"
                           onClick={() => processRemoveToCart(product)}
+                          size="large"
                         >
                           <RemoveShoppingCartIcon fontSize={"large"} />
                         </IconButton>
