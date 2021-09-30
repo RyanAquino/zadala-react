@@ -1,4 +1,11 @@
-import { Grid, Snackbar, SnackbarOrigin } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Snackbar,
+  SnackbarOrigin,
+  useScrollTrigger,
+  Zoom,
+} from "@mui/material";
 import Search from "./Search";
 import Products from "./Products";
 import createStyles from "@mui/styles/createStyles";
@@ -7,6 +14,8 @@ import React, { useContext, useEffect } from "react";
 import useProductSearch from "./useProductSearch";
 import { User, UserContextInterface } from "../Interfaces/User.interface";
 import { UserContext } from "../context/UserContext";
+import Fab from "@mui/material/Fab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Alert from "./Alerts";
 
 const useStyles = makeStyles(() =>
@@ -19,6 +28,40 @@ const useStyles = makeStyles(() =>
     },
   })
 );
+
+const ScrollTop = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element => {
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 100,
+  });
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const anchor = (
+      (event.target as HTMLDivElement).ownerDocument || document
+    ).querySelector("#back-to-top-anchor");
+
+    if (anchor) {
+      anchor.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
+  return (
+    <Zoom in={trigger}>
+      <Box
+        onClick={handleClick}
+        role="presentation"
+        sx={{ position: "fixed", bottom: 70, right: 20 }}
+      >
+        {children}
+      </Box>
+    </Zoom>
+  );
+};
 
 const Home = (): JSX.Element => {
   const classes = useStyles();
@@ -59,7 +102,7 @@ const Home = (): JSX.Element => {
         onClose={handleLoginClose}
       >
         <Alert severity="success" onClose={handleLoginClose}>
-          Welcome {user.first_name} !
+          Welcome {user.first_name}!
         </Alert>
       </Snackbar>
       <Snackbar
@@ -74,7 +117,7 @@ const Home = (): JSX.Element => {
         onClose={handleLogoutClose}
       >
         <Alert severity="success" onClose={handleLogoutClose}>
-          You have successfully logged out !
+          You have successfully logged out!
         </Alert>
       </Snackbar>
       <Grid
@@ -84,6 +127,7 @@ const Home = (): JSX.Element => {
         sm={8}
         justifyContent={"center"}
         className={classes.root}
+        id="back-to-top-anchor"
       >
         <Search setPageNumber={setPageNumber} setQuery={setQuery} />
       </Grid>
@@ -103,6 +147,11 @@ const Home = (): JSX.Element => {
           setPageNumber={setPageNumber}
         />
       </Grid>
+      <ScrollTop>
+        <Fab color="primary" size="small" aria-label="scroll back to top">
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </>
   );
 };
