@@ -100,9 +100,11 @@ const Register = ({
         onClose={() => true}
       >
         <Alert severity="error" onClose={() => true}>
-          {Array.from(errors).map((err: string, index: number) => (
-            <p key={index}>{err}</p>
-          ))}
+          {errors.length == 1
+            ? errors[0]
+            : Array.from(errors).map((err: string, index: number) => (
+                <p key={index}>{err}</p>
+              ))}
         </Alert>
       </Snackbar>
 
@@ -186,7 +188,7 @@ const Register = ({
                 onChange={handleFormChange}
                 inputProps={{
                   minLength: 8,
-                  maxLength: 254,
+                  maxLength: 65,
                 }}
               />
             </Grid>

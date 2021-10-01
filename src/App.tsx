@@ -61,7 +61,7 @@ const App: React.FC = () => {
                   />
                 </Grid>
                 <Grid item container>
-                  <Hidden smUp>
+                  <Hidden mdUp>
                     <MobileNavigation />
                   </Hidden>
                 </Grid>
