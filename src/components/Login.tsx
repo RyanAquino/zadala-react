@@ -183,9 +183,11 @@ const Login = ({
         onClose={handleErrorSnackbarClose}
       >
         <Alert severity="error" onClose={handleErrorSnackbarClose}>
-          {Array.from(errors).map((err: string, index: number) => (
-            <p key={index}>{err}</p>
-          ))}
+          {errors.length == 1
+            ? errors[0]
+            : Array.from(errors).map((err: string, index: number) => (
+                <p key={index}>{err}</p>
+              ))}
         </Alert>
       </Snackbar>
 
