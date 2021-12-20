@@ -14,13 +14,13 @@ Zadala React Application is the frontend application for [Zadala API](https://gi
 - Jest
 - Material UI
 
-### Setup
-
 ##### Copy local environment and modify based on your needs
 
 ```
 cp .env.local.example .env.local
 ```
+
+### Setup
 
 ##### Install required packages
 
@@ -32,4 +32,10 @@ npm install
 
 ```
 npm run start
+```
+
+### Setup (Alternative)
+
+```
+docker-compose up -d
 ```
