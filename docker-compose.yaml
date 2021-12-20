@@ -1,0 +1,11 @@
+version: "3.8"
+# docker-compose up && docker-compose rm -fsv # run and remove on exit
+
+services:
+  frontend:
+    container_name: zadala-react
+    build: .
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    command: npm start

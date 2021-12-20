@@ -19,13 +19,15 @@ import {
   User,
 } from "../Interfaces/User.interface";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
+
 export const updateCart = (
   productId: number,
   action: string
 ): Promise<Order> => {
   return axios
     .post(
-      `${process.env.REACT_APP_API_URL}/v1/orders/update-cart/`,
+      `${API_URL}/v1/orders/update-cart/`,
       {
         productId: productId,
         action: action,
@@ -49,7 +51,7 @@ export const updateCart = (
 
 export const getOrders = (): Promise<Order> => {
   return axios
-    .get(`${process.env.REACT_APP_API_URL}/v1/orders/`, {
+    .get(`${API_URL}/v1/orders/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -64,7 +66,7 @@ export const determineImage = (product: Product): string => {
 
 export const getProfileDetails = (): Promise<ProfileInterface> => {
   return axios
-    .get(`${process.env.REACT_APP_API_URL}/v1/auth/profile`, {
+    .get(`${API_URL}/v1/auth/profile`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -74,7 +76,7 @@ export const getProfileDetails = (): Promise<ProfileInterface> => {
 
 export const logout = (): void => {
   axios
-    .get(`${process.env.REACT_APP_API_URL}/v1/auth/logout`, {
+    .get(`${API_URL}/v1/auth/logout`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -86,7 +88,7 @@ export const updateProfileDetails = (
   data: ProfileDetailsInterface
 ): Promise<ProfileInterface> => {
   return axios
-    .patch(`${process.env.REACT_APP_API_URL}/v1/auth/profile/`, data, {
+    .patch(`${API_URL}/v1/auth/profile/`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -98,7 +100,7 @@ export const processOrder = (
   data: ShippingAddress
 ): Promise<ShippingAddress> => {
   return axios
-    .post(`${process.env.REACT_APP_API_URL}/v1/orders/process-order/`, data, {
+    .post(`${API_URL}/v1/orders/process-order/`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -114,7 +116,7 @@ export const fetchProducts = async (
   const cancelToken = params.cancelToken;
 
   return axios
-    .get<ProductsList>(`${process.env.REACT_APP_API_URL}/v1/products/`, {
+    .get<ProductsList>(`${API_URL}/v1/products/`, {
       params: { page: page, search: search },
       cancelToken: cancelToken,
     })
@@ -122,23 +124,18 @@ export const fetchProducts = async (
 };
 
 export const authenticate = (auth: Authentication): Promise<User> => {
-  return axios
-    .post(`${process.env.REACT_APP_API_URL}/v1/auth/login/`, auth)
-    .then(({ data }) => data);
+  return axios.post(`${API_URL}/v1/auth/login/`, auth).then(({ data }) => data);
 };
 
 export const retrieveProduct = async (id: string): Promise<Product> => {
   return axios
-    .get<Product>(`${process.env.REACT_APP_API_URL}/v1/products/${id}/`)
+    .get<Product>(`${API_URL}/v1/products/${id}/`)
     .then(({ data }) => data);
 };
 
 export const register = (userInfo: Registration): Promise<JSON> => {
   return axios
-    .post(
-      `${process.env.REACT_APP_API_URL}/v1/auth/customer/register/`,
-      userInfo
-    )
+    .post(`${API_URL}/v1/auth/customer/register/`, userInfo)
     .then(({ data }) => data);
 };
 
