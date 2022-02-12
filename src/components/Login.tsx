@@ -19,14 +19,26 @@ import makeStyles from "@mui/styles/makeStyles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   Authentication,
+  User,
   UserContextInterface,
 } from "../Interfaces/User.interface";
 import { UserContext } from "../context/UserContext";
-import { authenticate, getOrders, validateToken } from "../api/utils";
+import {
+  authenticate,
+  getOrders,
+  socialLoginGoogle,
+  validateToken,
+} from "../api/utils";
 import { useHistory } from "react-router";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { OrdersContext } from "../context/OrdersContext";
 import Alert from "./Alerts";
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
+import { OAuthError } from "../Interfaces/OAuth.interface";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  socialLogins: {
+    marginTop: "5px",
   },
 }));
 
@@ -103,13 +118,7 @@ const Login = ({
     });
 
     if (response) {
-      setUserData({ ...response, login: true, logout: false });
-      localStorage.setItem("token", response.access);
-      const fetchOrders = async () => await getOrders();
-      fetchOrders().then((orderData) => {
-        setOrderData(orderData);
-      });
-      history.push("/");
+      loginSuccess(response);
     }
 
     if (rememberMe) {
@@ -124,6 +133,15 @@ const Login = ({
     }
 
     handleClose();
+  };
+  const loginSuccess = (response: User) => {
+    setUserData({ ...response, login: true, logout: false });
+    localStorage.setItem("token", response.access);
+    const fetchOrders = async () => await getOrders();
+    fetchOrders().then((orderData) => {
+      setOrderData(orderData);
+    });
+    history.push("/");
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,6 +165,21 @@ const Login = ({
 
   const handleRememberMe = () => {
     setRememberMe(!rememberMe);
+  };
+
+  const responseSuccessGoogle = async (
+    response: GoogleLoginResponse | GoogleLoginResponseOffline
+  ) => {
+    if (!("tokenId" in response)) return;
+    const user = await socialLoginGoogle(response.tokenId);
+    loginSuccess(user);
+  };
+
+  const responseFailGoogle = (response: OAuthError) => {
+    if ("error" in response && "details" in response) {
+      setErrorWindow(true);
+      setErrors([response.details]);
+    }
   };
 
   return (
@@ -257,6 +290,14 @@ const Login = ({
             </Link>
           </Grid>
         </Grid>
+        <GoogleLogin
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
+          buttonText="Sign in with Google"
+          onSuccess={responseSuccessGoogle}
+          onFailure={responseFailGoogle}
+          cookiePolicy={"single_host_origin"}
+          className={classes.socialLogins}
+        />
       </form>
     </Container>
   );

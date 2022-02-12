@@ -4,6 +4,7 @@ export interface ProfileInterface {
   first_name: string;
   last_name: string;
   last_login: string;
+  auth_provider: string;
   date_joined: string;
 }
 

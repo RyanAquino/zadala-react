@@ -154,3 +154,9 @@ export const validateToken = (): boolean => {
   }
   return true;
 };
+
+export const socialLoginGoogle = (authToken: string): Promise<User> => {
+  return axios
+    .post(`${API_URL}/v1/social-auth/google/`, { auth_token: authToken })
+    .then(({ data }) => data);
+};
