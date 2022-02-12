@@ -190,21 +190,25 @@ const Profile: React.FC = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <TextField
-                  id="password"
-                  label="Password"
-                  type="password"
-                  name={"password"}
-                  autoComplete="current-password"
-                  fullWidth
-                  variant={"outlined"}
-                  onChange={handleFormChange}
-                  InputProps={{
-                    readOnly: readOnly,
-                  }}
-                />
-              </Grid>
+              {profileDetails.auth_provider == "email" ? (
+                <Grid item xs={12} className={classes.fieldsRoot}>
+                  <TextField
+                    id="password"
+                    label="Password"
+                    type="password"
+                    name={"password"}
+                    autoComplete="current-password"
+                    fullWidth
+                    variant={"outlined"}
+                    onChange={handleFormChange}
+                    InputProps={{
+                      readOnly: readOnly,
+                    }}
+                  />
+                </Grid>
+              ) : (
+                ""
+              )}
               <Grid item xs={12} className={classes.fieldsRoot}>
                 <TextField
                   disabled
