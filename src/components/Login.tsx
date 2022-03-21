@@ -171,8 +171,22 @@ const Login = ({
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
     if (!("tokenId" in response)) return;
-    const user = await socialLoginGoogle(response.tokenId);
-    loginSuccess(user);
+    handleToggle();
+    const user = await socialLoginGoogle(response.tokenId).catch((err) => {
+      const statusCode = err.response.status;
+      let error = ["Something went wrong"];
+
+      if (statusCode === 403) {
+        const { email }: { email: string } = err.response.data;
+        error = [email];
+      }
+      setErrorWindow(true);
+      setErrors(error);
+    });
+    if (user) {
+      loginSuccess(user);
+    }
+    handleClose();
   };
 
   const responseFailGoogle = (response: OAuthError) => {
