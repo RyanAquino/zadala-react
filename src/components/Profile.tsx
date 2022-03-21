@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(20),
       height: theme.spacing(20),
     },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+    },
   })
 );
 
@@ -60,12 +63,22 @@ const Profile: React.FC = () => {
   const { setUserData } = useContext<UserContextInterface>(UserContext);
   const { setOrderData } = useContext<OrdersContextInterface>(OrdersContext);
 
-  const saveProfile = async () => {
+  const saveProfile = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsEditing(false);
     setReadonly(true);
     setSuccess(true);
     setInitialDetails(profileDetails);
+    cleanFormData(profileDetails as never);
     await updateProfileDetails(profileDetails).catch((e) => console.log(e));
+  };
+
+  const cleanFormData = (objectDetails: never) => {
+    Object.keys(objectDetails).forEach((key) => {
+      if (objectDetails[key] === "") {
+        delete objectDetails[key];
+      }
+    });
   };
 
   const editProfile = () => {
@@ -104,7 +117,8 @@ const Profile: React.FC = () => {
     localStorage.removeItem("token");
   };
 
-  const handleDate = (date: string) => new Date(date).toDateString();
+  const handleDate = (date: string) => new Date(date).toLocaleDateString();
+  const handleDateTime = (date: string) => new Date(date).toLocaleString();
 
   return (
     <Grid item container justifyContent={"center"} xs={12}>
@@ -146,136 +160,157 @@ const Profile: React.FC = () => {
               sm={6}
               alignItems="center"
             >
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <TextField
-                  id="email"
-                  fullWidth
-                  type={"email"}
-                  label="Email Address"
-                  name={"email"}
-                  variant={"outlined"}
-                  value={profileDetails.email || ""}
-                  onChange={handleFormChange}
-                  inputRef={inputRef}
-                  InputProps={{
-                    readOnly: readOnly,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <TextField
-                  id="first-name"
-                  label="First Name"
-                  fullWidth
-                  name={"first_name"}
-                  value={profileDetails.first_name || ""}
-                  onChange={handleFormChange}
-                  variant={"outlined"}
-                  InputProps={{
-                    readOnly: readOnly,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <TextField
-                  id="last-name"
-                  label="Last Name"
-                  name={"last_name"}
-                  variant={"outlined"}
-                  fullWidth
-                  value={profileDetails.last_name || ""}
-                  onChange={handleFormChange}
-                  InputProps={{
-                    readOnly: readOnly,
-                  }}
-                />
-              </Grid>
-              {profileDetails.auth_provider == "email" ? (
+              <form className={classes.form} onSubmit={saveProfile}>
                 <Grid item xs={12} className={classes.fieldsRoot}>
                   <TextField
-                    id="password"
-                    label="Password"
-                    type="password"
-                    name={"password"}
-                    autoComplete="current-password"
+                    id="email"
                     fullWidth
+                    type={"email"}
+                    label="Email Address"
+                    name={"email"}
                     variant={"outlined"}
+                    value={profileDetails.email || ""}
                     onChange={handleFormChange}
+                    required
+                    inputRef={inputRef}
                     InputProps={{
                       readOnly: readOnly,
                     }}
+                    inputProps={{
+                      minLength: 4,
+                      maxLength: 254,
+                    }}
                   />
                 </Grid>
-              ) : (
-                ""
-              )}
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <TextField
-                  disabled
-                  id="member-since"
-                  label="Member Since"
-                  variant={"outlined"}
-                  value={handleDate(profileDetails.date_joined) || ""}
-                  onChange={handleFormChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <TextField
-                  disabled
-                  id="last-login"
-                  label="Last Login"
-                  variant={"outlined"}
-                  value={handleDate(profileDetails.last_login) || ""}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} className={classes.fieldsRoot}>
-                <Grid item container xs={12}>
-                  {isEditing ? (
-                    <Grid item xs={12}>
-                      <Button
-                        variant="outlined"
-                        startIcon={<CancelIcon />}
-                        size={"large"}
-                        color={"error"}
-                        fullWidth
-                        onClick={() => {
-                          setIsEditing(false);
-                          setReadonly(true);
-                          setProfileDetails(initialDetails);
-                        }}
-                        style={{ marginBottom: 8 }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<SaveIcon />}
-                        size={"large"}
-                        fullWidth
-                        onClick={() => saveProfile()}
-                      >
-                        Save
-                      </Button>
-                    </Grid>
-                  ) : (
-                    <Grid item xs={12}>
-                      <Button
-                        variant="outlined"
-                        startIcon={<EditIcon />}
-                        size={"large"}
-                        color={"primary"}
-                        fullWidth
-                        onClick={() => editProfile()}
-                      >
-                        Edit
-                      </Button>
-                    </Grid>
-                  )}
+                <Grid item xs={12} className={classes.fieldsRoot}>
+                  <TextField
+                    id="first-name"
+                    label="First Name"
+                    fullWidth
+                    name={"first_name"}
+                    value={profileDetails.first_name || ""}
+                    onChange={handleFormChange}
+                    required
+                    variant={"outlined"}
+                    InputProps={{
+                      readOnly: readOnly,
+                    }}
+                    inputProps={{
+                      minLength: 2,
+                      maxLength: 254,
+                    }}
+                  />
                 </Grid>
-              </Grid>
+                <Grid item xs={12} className={classes.fieldsRoot}>
+                  <TextField
+                    id="last-name"
+                    label="Last Name"
+                    name={"last_name"}
+                    variant={"outlined"}
+                    fullWidth
+                    value={profileDetails.last_name || ""}
+                    onChange={handleFormChange}
+                    required
+                    InputProps={{
+                      readOnly: readOnly,
+                    }}
+                    inputProps={{
+                      minLength: 2,
+                      maxLength: 254,
+                    }}
+                  />
+                </Grid>
+                {profileDetails.auth_provider == "email" ? (
+                  <Grid item xs={12} className={classes.fieldsRoot}>
+                    <TextField
+                      id="password"
+                      label="Password"
+                      type="password"
+                      name={"password"}
+                      autoComplete="current-password"
+                      fullWidth
+                      variant={"outlined"}
+                      onChange={handleFormChange}
+                      InputProps={{
+                        readOnly: readOnly,
+                      }}
+                      inputProps={{
+                        minLength: 8,
+                        maxLength: 65,
+                      }}
+                    />
+                  </Grid>
+                ) : (
+                  ""
+                )}
+                <Grid item xs={12} className={classes.fieldsRoot}>
+                  <TextField
+                    disabled
+                    id="member-since"
+                    label="Member Since"
+                    variant={"outlined"}
+                    value={handleDate(profileDetails.date_joined) || ""}
+                    onChange={handleFormChange}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} className={classes.fieldsRoot}>
+                  <TextField
+                    disabled
+                    id="last-login"
+                    label="Last Login"
+                    variant={"outlined"}
+                    value={handleDateTime(profileDetails.last_login) || ""}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} className={classes.fieldsRoot}>
+                  <Grid item container xs={12}>
+                    {isEditing ? (
+                      <Grid item xs={12}>
+                        <Button
+                          variant="outlined"
+                          startIcon={<CancelIcon />}
+                          size={"large"}
+                          color={"error"}
+                          fullWidth
+                          onClick={() => {
+                            setIsEditing(false);
+                            setReadonly(true);
+                            setProfileDetails(initialDetails);
+                          }}
+                          style={{ marginBottom: 8 }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          startIcon={<SaveIcon />}
+                          size={"large"}
+                          fullWidth
+                          type={"submit"}
+                        >
+                          Save
+                        </Button>
+                      </Grid>
+                    ) : (
+                      <Grid item xs={12}>
+                        <Button
+                          variant="outlined"
+                          startIcon={<EditIcon />}
+                          size={"large"}
+                          color={"primary"}
+                          fullWidth
+                          onClick={() => editProfile()}
+                        >
+                          Edit
+                        </Button>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Grid>
+              </form>
               <Grid item xs={12} className={classes.fieldsRoot}>
                 <Button
                   variant="contained"
