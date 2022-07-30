@@ -69,7 +69,7 @@ const Product: React.FC<{
   );
 
   const handleConfirm = async (product: ProductType): Promise<void> => {
-    const orderItems = orderData.products;
+    const orderItems = orderData.products || [];
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [orderItem, ...rest] = orderItems.filter(
       (item: OrderItem) => item.product.id === product.id

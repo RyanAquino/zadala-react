@@ -24,7 +24,6 @@ import {
 import { OrdersContext } from "../context/OrdersContext";
 import { ShippingAddress } from "../Interfaces/Shipping.interface";
 import { processOrder } from "../api/utils";
-import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,7 +80,6 @@ const Checkout = ({
 
   const products: OrderItem[] = orderData.products;
   const totalAmount: number = orderData.total_amount;
-  const history = useHistory();
 
   const getStepContent = (step: number) => {
     switch (step) {
@@ -209,9 +207,6 @@ const Checkout = ({
       await processOrder(shipping);
       setOrderData({} as Order);
       setTotalItems(0);
-      setTimeout(() => {
-        history.push("/");
-      }, 6000);
     } else if (activeStep === 0) {
       const { address, state, city, zipcode } = shipping;
       if (address && state && city && zipcode) {

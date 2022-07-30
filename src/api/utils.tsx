@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { Order } from "../Interfaces/Orders.interface";
+import { Order, OrderHistory } from "../Interfaces/Orders.interface";
 import default_image from "../static/default.jpg";
 import {
   Product,
@@ -66,7 +66,7 @@ export const determineImage = (product: Product): string => {
 
 export const getProfileDetails = (): Promise<ProfileInterface> => {
   return axios
-    .get(`${API_URL}/v1/auth/profile`, {
+    .get(`${API_URL}/v1/auth/profile/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -158,5 +158,22 @@ export const validateToken = (): boolean => {
 export const socialLoginGoogle = (authToken: string): Promise<User> => {
   return axios
     .post(`${API_URL}/v1/social-auth/google/`, { auth_token: authToken })
+    .then(({ data }) => data);
+};
+
+export const fetchOrderHistory = async (
+  page = 1,
+  pageSize = 5
+): Promise<OrderHistory> => {
+  return axios
+    .get<OrderHistory>(`${API_URL}/v1/orders/history/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      params: {
+        page_size: pageSize,
+        page: page,
+      },
+    })
     .then(({ data }) => data);
 };
