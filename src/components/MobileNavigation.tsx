@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import withStyles from "@mui/styles/withStyles";
-import { AccountCircle, Home } from "@mui/icons-material";
+import { AccountCircle, Home, History } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import React, { useContext, useEffect } from "react";
 import { Theme } from "@mui/material/styles";
@@ -77,6 +77,14 @@ const MobileNavigation: React.FC = () => {
           component={Link}
           to={
             localStorage.getItem("token") === undefined ? "/login" : "/profile"
+          }
+        />
+        <BottomNavigationAction
+          label="Orders"
+          icon={<History />}
+          component={Link}
+          to={
+            localStorage.getItem("token") === undefined ? "/login" : "/orders"
           }
         />
       </BottomNavigation>

@@ -11,7 +11,7 @@ import React, { useContext, useEffect } from "react";
 import createStyles from "@mui/styles/createStyles";
 import makeStyles from "@mui/styles/makeStyles";
 import { Link } from "react-router-dom";
-import { AccountCircle, Home, ExitToApp } from "@mui/icons-material";
+import { AccountCircle, Home, ExitToApp, History } from "@mui/icons-material";
 import { User, UserContextInterface } from "../Interfaces/User.interface";
 import { useHistory } from "react-router";
 import { UserContext } from "../context/UserContext";
@@ -94,6 +94,14 @@ const HeaderBar = (): JSX.Element => {
                 to={"/profile"}
               >
                 Account
+              </Button>
+              <Button
+                startIcon={<History />}
+                color="inherit"
+                component={Link}
+                to={"/orders"}
+              >
+                Orders
               </Button>
             </Box>
           </Hidden>

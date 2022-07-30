@@ -5,6 +5,7 @@ import Cart from "./components/Cart";
 import Home from "./components/Home";
 import ProductDetails from "./components/ProductDetails";
 import MobileNavigation from "./components/MobileNavigation";
+import OrderHistory from "./components/OrderHistory";
 import { ProductsProvider } from "./context/ProductsContext";
 import { UserProvider } from "./context/UserContext";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -59,6 +60,7 @@ const App: React.FC = () => {
                     exact
                     component={ProductDetails}
                   />
+                  <Route path={"/orders"} exact component={OrderHistory} />
                 </Grid>
                 <Grid item container>
                   <Hidden mdUp>
