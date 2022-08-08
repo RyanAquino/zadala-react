@@ -16,6 +16,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import { ThemeProvider } from "@mui/material/styles";
 import { Theme, createTheme } from "@mui/material/styles";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 declare module "@mui/styles/defaultTheme" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -27,52 +28,56 @@ const App: React.FC = () => {
   const theme = createTheme();
 
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Grid container>
-          <UserProvider>
-            <OrdersProvider>
-              <ProductsProvider>
-                <Grid item container>
-                  <HeaderBar />
-                </Grid>
-                <Grid item container xs={12} justifyContent={"center"}>
-                  <Route path={"/"} exact component={() => <Home />} />
-                  <Route
-                    path={"/login"}
-                    exact
-                    component={() => (
-                      <Login
-                        registered={registered}
-                        setRegister={setRegister}
-                      />
-                    )}
-                  />
-                  <Route
-                    path={"/register"}
-                    exact
-                    component={() => <Register setRegister={setRegister} />}
-                  />
-                  <Route path={"/profile"} exact component={Profile} />
-                  <Route path={"/cart"} exact component={Cart} />
-                  <Route
-                    path={"/products/:id"}
-                    exact
-                    component={ProductDetails}
-                  />
-                  <Route path={"/orders"} exact component={OrderHistory} />
-                </Grid>
-                <Grid item container>
-                  <Hidden mdUp>
-                    <MobileNavigation />
-                  </Hidden>
-                </Grid>
-              </ProductsProvider>
-            </OrdersProvider>
-          </UserProvider>
-        </Grid>
-      </Router>
-    </ThemeProvider>
+    <GoogleOAuthProvider
+      clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
+    >
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Grid container>
+            <UserProvider>
+              <OrdersProvider>
+                <ProductsProvider>
+                  <Grid item container>
+                    <HeaderBar />
+                  </Grid>
+                  <Grid item container xs={12} justifyContent={"center"}>
+                    <Route path={"/"} exact component={() => <Home />} />
+                    <Route
+                      path={"/login"}
+                      exact
+                      component={() => (
+                        <Login
+                          registered={registered}
+                          setRegister={setRegister}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={"/register"}
+                      exact
+                      component={() => <Register setRegister={setRegister} />}
+                    />
+                    <Route path={"/profile"} exact component={Profile} />
+                    <Route path={"/cart"} exact component={Cart} />
+                    <Route
+                      path={"/products/:id"}
+                      exact
+                      component={ProductDetails}
+                    />
+                    <Route path={"/orders"} exact component={OrderHistory} />
+                  </Grid>
+                  <Grid item container>
+                    <Hidden mdUp>
+                      <MobileNavigation />
+                    </Hidden>
+                  </Grid>
+                </ProductsProvider>
+              </OrdersProvider>
+            </UserProvider>
+          </Grid>
+        </Router>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 };
 

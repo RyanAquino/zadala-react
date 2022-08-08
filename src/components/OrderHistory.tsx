@@ -104,10 +104,12 @@ const OrderHistoryPage: React.FC = () => {
 
   useEffect(() => {
     if (!validateToken()) history.push("/login");
-    const orderHistory = async () => await fetchOrderHistory();
-    orderHistory().then((orderHistory: OrderHistory) => {
-      setOrderHistoryData(orderHistory);
-    });
+    else {
+      const orderHistory = async () => await fetchOrderHistory();
+      orderHistory().then((orderHistory: OrderHistory) => {
+        setOrderHistoryData(orderHistory);
+      });
+    }
   }, []);
 
   const [page, setPage] = React.useState(0);
