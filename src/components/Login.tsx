@@ -33,12 +33,7 @@ import { useHistory } from "react-router";
 import { OrdersContextInterface } from "../Interfaces/Orders.interface";
 import { OrdersContext } from "../context/OrdersContext";
 import Alert from "./Alerts";
-import {
-  GoogleLogin,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
-import { OAuthError } from "../Interfaces/OAuth.interface";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -167,12 +162,10 @@ const Login = ({
     setRememberMe(!rememberMe);
   };
 
-  const responseSuccessGoogle = async (
-    response: GoogleLoginResponse | GoogleLoginResponseOffline
-  ) => {
-    if (!("tokenId" in response)) return;
+  const responseSuccessGoogle = async (response: CredentialResponse) => {
+    if (!response.credential) return;
     handleToggle();
-    const user = await socialLoginGoogle(response.tokenId).catch((err) => {
+    const user = await socialLoginGoogle(response.credential).catch((err) => {
       const statusCode = err.response.status;
       let error = ["Something went wrong"];
 
@@ -189,11 +182,9 @@ const Login = ({
     handleClose();
   };
 
-  const responseFailGoogle = (response: OAuthError) => {
-    if ("error" in response && "details" in response) {
-      setErrorWindow(true);
-      setErrors([response.details]);
-    }
+  const responseFailGoogle = () => {
+    setErrorWindow(true);
+    setErrors(["Something went wrong"]);
   };
 
   return (
@@ -305,12 +296,8 @@ const Login = ({
           </Grid>
         </Grid>
         <GoogleLogin
-          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
-          buttonText="Sign in with Google"
           onSuccess={responseSuccessGoogle}
-          onFailure={responseFailGoogle}
-          cookiePolicy={"single_host_origin"}
-          className={classes.socialLogins}
+          onError={responseFailGoogle}
         />
       </form>
     </Container>

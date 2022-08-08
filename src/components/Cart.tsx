@@ -99,7 +99,7 @@ const Cart: React.FC = () => {
 
   useEffect(() => {
     if (!validateToken()) history.push("/login");
-    if (Object.entries(orderData).length === 0) {
+    else if (Object.entries(orderData).length === 0) {
       const fetchOrders = async () => await getOrders();
       fetchOrders().then((orderData) => {
         setOrderData(orderData);
