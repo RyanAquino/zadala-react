@@ -14,6 +14,7 @@ import {
   Typography,
   Snackbar,
   SnackbarOrigin,
+  SnackbarCloseReason,
 } from "@mui/material";
 import createStyles from "@mui/styles/createStyles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -86,7 +87,10 @@ const ProductDetails: ({
     setIsSuccess(success);
   };
 
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose = (
+    event?: Event | React.SyntheticEvent<Element, Event> | undefined,
+    reason?: SnackbarCloseReason
+  ) => {
     if (reason === "clickaway") {
       setOpen(false);
       return;
