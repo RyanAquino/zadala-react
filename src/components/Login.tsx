@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   Authentication,
